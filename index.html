@@ -1,303 +1,3 @@
-<div class="detail-title">
-                        <span>Tokyo - Janvier 2024</span>
-                        <span class="detail-price">7 jours</span>
-                    </div>
-                    <div class="detail-subtitle">Japon</div>
-                    
-                    <div class="map-container">
-                        <div id="map-tokyo"></div>
-                    </div>
-                    
-                    <div class="detail-info">
-                        <div class="info-item">
-                            <div class="info-icon">
-                                <i class="fas fa-plane"></i>
-                            </div>
-                            <div class="info-content">
-                                <div class="info-label">Vol aller</div>
-                                <div class="info-value">15 Jan 2024 - 13:20</div>
-                            </div>
-                        </div>
-                        
-                        <div class="info-item">
-                            <div class="info-icon">
-                                <i class="fas fa-hotel"></i>
-                            </div>
-                            <div class="info-content">
-                                <div class="info-label">Hébergement</div>
-                                <div class="info-value">Park Hyatt Tokyo</div>
-                            </div>
-                        </div>
-                        
-                        <div class="info-item">
-                            <div class="info-icon">
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
-                            <div class="info-content">
-                                <div class="info-label">Durée</div>
-                                <div class="info-value">15 - 22 Jan 2024</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <h3 style="margin: 25px 0 15px;">Chronologie du séjour</h3>
-                    
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-marker">
-                                <i class="fas fa-plane"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">
-                                    <span>Vol Paris-Tokyo</span>
-                                    <span class="timeline-date">15 Jan, 13:20</span>
-                                </div>
-                                <div class="timeline-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Aéroport de Narita</span>
-                                </div>
-                                <div class="timeline-description">
-                                    Vol JL416 - Direct
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="timeline-item">
-                            <div class="timeline-marker">
-                                <i class="fas fa-hotel"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">
-                                    <span>Park Hyatt Tokyo</span>
-                                    <span class="timeline-date">15 Jan, 18:00</span>
-                                </div>
-                                <div class="timeline-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>3-7-1-2 Nishi Shinjuku, Shinjuku-Ku</span>
-                                </div>
-                                <div class="timeline-description">
-                                    Chambre Park Deluxe<br>
-                                    Check-in: 15 Jan - Check-out: 22 Jan
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="timeline-item">
-                            <div class="timeline-marker">
-                                <i class="fas fa-torii-gate"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">
-                                    <span>Visite du sanctuaire Meiji</span>
-                                    <span class="timeline-date">16 Jan, 10:00</span>
-                                </div>
-                                <div class="timeline-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>1-1 Yoyogikamizonocho, Shibuya-ku</span>
-                                </div>
-                                <div class="timeline-description">
-                                    Visite du plus grand sanctuaire shinto de Tokyo<br>
-                                    Durée: 2h
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <button class="btn btn-outline" style="margin-right: 15px;" data-modal="add-item-modal">
-                            <i class="fas fa-edit"></i>
-                            <span>Modifier</span>
-                        </button>
-                        <button class="btn btn-primary" data-modal="add-item-modal">
-                            <i class="fas fa-plus"></i>
-                            <span>Ajouter un élément</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Vue Documents -->
-            <div class="view documents-view" id="documents-view">
-                <header class="header">
-                    <h1 class="header-title">Mes Documents</h1>
-                    <button class="btn btn-primary" data-modal="add-document-modal">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </header>
-                
-                <div class="categories">
-                    <div class="tabs">
-                        <div class="tab active" data-filter="all">Tous</div>
-                        <div class="tab" data-filter="flight">Vols</div>
-                        <div class="tab" data-filter="accommodation">Hébergements</div>
-                        <div class="tab" data-filter="activity">Activités</div>
-                        <div class="tab" data-filter="other">Autres</div>
-                    </div>
-                </div>
-                
-                <div class="section-search">
-                    <div class="search-container">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" class="search-input" placeholder="Rechercher un document...">
-                    </div>
-                </div>
-                
-                <div class="documents-list">
-                    <!-- Les documents seront insérés ici par JavaScript -->
-                    <div class="empty-state">
-                        <i class="fas fa-file-alt empty-icon"></i>
-                        <p>Chargement des documents...</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Add Item Modal -->
-            <div class="modal" id="add-item-modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">Ajouter un élément</h3>
-                        <button class="modal-close">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="add-item-form">
-                            <div class="form-group">
-                                <label for="item-type" class="form-label">Type d'élément</label>
-                                <select id="item-type" name="item-type" class="form-control" required>
-                                    <option value="">Sélectionnez un type</option>
-                                    <option value="flight">Vol</option>
-                                    <option value="accommodation">Hébergement</option>
-                                    <option value="activity">Activité</option>
-                                    <option value="restaurant">Restaurant</option>
-                                    <option value="document">Document</option>
-                                    <option value="other">Autre</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="item-title" class="form-label">Titre</label>
-                                <input type="text" id="item-title" name="item-title" class="form-control" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="item-date" class="form-label">Date et heure</label>
-                                <input type="datetime-local" id="item-date" name="item-date" class="form-control" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="item-location" class="form-label">Lieu</label>
-                                <input type="text" id="item-location" name="item-location" class="form-control location-autocomplete" placeholder="Commencez à taper une adresse...">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="item-description" class="form-label">Description</label>
-                                <textarea id="item-description" name="item-description" class="form-control"></textarea>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="item-attachment" class="form-label">Pièces jointes</label>
-                                <input type="file" id="item-attachment" name="item-attachment" class="form-control" multiple>
-                                <div class="file-preview-container">
-                                    <!-- Les fichiers sélectionnés apparaîtront ici -->
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline" id="cancel-btn">Annuler</button>
-                        <button type="submit" form="add-item-form" class="btn btn-primary">Ajouter</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ajout Document Modal -->
-            <div class="modal" id="add-document-modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">Ajouter un document</h3>
-                        <button class="modal-close">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="add-document-form">
-                            <div class="form-group">
-                                <label for="document-type" class="form-label">Type de document</label>
-                                <select id="document-type" name="document-type" class="form-control" required>
-                                    <option value="">Sélectionnez un type</option>
-                                    <option value="flight">Billets de vol</option>
-                                    <option value="accommodation">Réservation d'hôtel</option>
-                                    <option value="activity">Tickets d'activité</option>
-                                    <option value="insurance">Assurance voyage</option>
-                                    <option value="visa">Visa / Documents officiels</option>
-                                    <option value="map">Carte / Itinéraire</option>
-                                    <option value="other">Autre</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="document-title" class="form-label">Titre</label>
-                                <input type="text" id="document-title" name="document-title" class="form-control" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="document-trip" class="form-label">Voyage associé</label>
-                                <select id="document-trip" name="document-trip" class="form-control">
-                                    <option value="">Aucun voyage spécifique</option>
-                                    <option value="paris">Paris</option>
-                                    <option value="rome">Rome</option>
-                                    <option value="bali">Bali</option>
-                                    <option value="tokyo">Tokyo</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="document-date" class="form-label">Date du document</label>
-                                <input type="date" id="document-date" name="document-date" class="form-control">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="document-file" class="form-label">Fichier</label>
-                                <input type="file" id="document-file" name="document-file" class="form-control" required>
-                                <div class="file-preview-container">
-                                    <!-- Les fichiers sélectionnés apparaîtront ici -->
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="document-notes" class="form-label">Notes</label>
-                                <textarea id="document-notes" name="document-notes" class="form-control"></textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline" id="cancel-document-btn">Annuler</button>
-                        <button type="submit" form="add-document-form" class="btn btn-primary">Ajouter</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Bottom Navigation -->
-        <nav class="bottom-nav">
-            <a href="#" class="nav-item active" data-view="home-view">
-                <i class="fas fa-home nav-icon"></i>
-                <span>Accueil</span>
-            </a>
-            <a href="#" class="nav-item" data-view="itineraries-view">
-                <i class="fas fa-map-marked-alt nav-icon"></i>
-                <span>Itinéraires</span>
-            </a>
-            <a href="#" class="nav-item" data-modal="add-trip-modal">
-                <i class="fas fa-plus-circle nav-icon"></i>
-                <span>Nouveau</span>
-            </a>
-            <a href="#" class="nav-item" data-view="documents-view">
-                <i class="fas fa-file-alt nav-icon"></i>
-                <span>Documents</span>
-            </a>
-            <a href="#" class="nav-item" data-view="settings-view">
-                <i class="fas fa-cog nav-icon"></i>
-                <span>Réglages</span>
-            </a>
-        </nav>
     </div>
     
     <!-- Scripts externes -->
@@ -406,10 +106,10 @@
         
         // Calculate days until next trip
         function updateCountdown() {
-            // Find the next upcoming trip
+            // Trouver le prochain voyage à venir
             const now = new Date();
             
-            // Sample trip dates (in a real app, these would come from your data)
+            // Données des voyages (dans une application réelle, ces données viendraient d'une base de données ou d'une API)
             const trips = [
                 { name: "Tokyo", date: new Date("2024-01-15") },
                 { name: "Paris", date: new Date("2023-08-10") },
@@ -417,20 +117,20 @@
                 { name: "Bali", date: new Date("2023-12-11") }
             ];
             
-            // Sort trips by date (ascending)
+            // Trier les voyages par date (ascendant)
             trips.sort((a, b) => a.date - b.date);
             
-            // Find the next trip (first trip in the future)
+            // Trouver le prochain voyage (premier voyage dans le futur)
             const upcomingTrips = trips.filter(trip => trip.date > now);
             
             if (upcomingTrips.length > 0) {
                 const nextTrip = upcomingTrips[0];
                 
-                // Calculate days difference
+                // Calculer la différence en jours
                 const timeDiff = nextTrip.date.getTime() - now.getTime();
                 const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 
-                // Update the countdown display
+                // Mettre à jour l'affichage du compte à rebours
                 const countdownDays = document.querySelector('.countdown-days');
                 const countdownDest = document.querySelector('.countdown-dest');
                 
@@ -441,19 +141,19 @@
             }
         }
         
-        // View management functions
+        // Fonctions de gestion des vues
         function showView(viewId) {
-            // Hide all views
+            // Cacher toutes les vues
             document.querySelectorAll('.view').forEach(view => {
                 view.classList.remove('active');
             });
             
-            // Show the requested view
+            // Afficher la vue demandée
             const view = document.getElementById(viewId);
             if (view) {
                 view.classList.add('active');
                 
-                // Update navigation active state
+                // Mettre à jour l'état actif de la navigation
                 document.querySelectorAll('.nav-item').forEach(item => {
                     if (item.dataset.view === viewId) {
                         item.classList.add('active');
@@ -479,23 +179,12 @@
         
         // Fonction pour afficher un indicateur de chargement
         function showLoader(message = 'Chargement...') {
-            let loader = document.getElementById('loader');
+            const loader = document.getElementById('loader');
             
-            if (!loader) {
-                loader = document.createElement('div');
-                loader.id = 'loader';
-                loader.innerHTML = `
-                    <div class="loader-content">
-                        <div class="spinner"></div>
-                        <p class="loader-message">${message}</p>
-                    </div>
-                `;
-                document.body.appendChild(loader);
-            } else {
+            if (loader) {
                 loader.querySelector('.loader-message').textContent = message;
+                loader.style.display = 'flex';
             }
-            
-            loader.style.display = 'flex';
         }
         
         // Fonction pour masquer l'indicateur de chargement
@@ -508,6 +197,13 @@
         
         // Fonction pour afficher une notification
         function showNotification(message, type = 'info') {
+            // Supprimer toute notification existante
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => {
+                notification.remove();
+            });
+            
+            // Créer une nouvelle notification
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
             notification.innerHTML = `
@@ -559,98 +255,263 @@
             const fileInputs = document.querySelectorAll('input[type="file"]');
             fileInputs.forEach(input => {
                 input.addEventListener('change', function(e) {
-                    // Ajouter une prévisualisation des fichiers sélectionnés
-                    const filePreview = document.createElement('div');
-                    filePreview.classList.add('file-preview');
-                    
-                    for (const file of this.files) {
-                        const fileItem = document.createElement('div');
-                        fileItem.classList.add('file-item');
-                        fileItem.innerHTML = `
-                            <i class="fas fa-file"></i>
-                            <span>${file.name}</span>
-                            <small>(${formatFileSize(file.size)})</small>
-                        `;
-                        filePreview.appendChild(fileItem);
-                    }
-                    
-                    // Afficher la prévisualisation
+                    // Vider le conteneur de prévisualisation
                     const previewContainer = this.parentElement.querySelector('.file-preview-container');
                     if (previewContainer) {
                         previewContainer.innerHTML = '';
-                        previewContainer.appendChild(filePreview);
+                        
+                        // Ajouter une prévisualisation des fichiers sélectionnés
+                        if (this.files.length > 0) {
+                            const filePreview = document.createElement('div');
+                            filePreview.classList.add('file-preview');
+                            
+                            for (const file of this.files) {
+                                const fileItem = document.createElement('div');
+                                fileItem.classList.add('file-item');
+                                fileItem.innerHTML = `
+                                    <i class="fas ${file.type.includes('image') ? 'fa-file-image' : file.type.includes('pdf') ? 'fa-file-pdf' : 'fa-file'}"></i>
+                                    <span>${file.name}</span>
+                                    <small>(${formatFileSize(file.size)})</small>
+                                `;
+                                filePreview.appendChild(fileItem);
+                            }
+                            
+                            previewContainer.appendChild(filePreview);
+                        }
                     }
                 });
             });
             
             // Gérer la soumission du formulaire d'ajout d'élément
-            document.getElementById('add-item-form').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                try {
-                    // Récupérer les données du formulaire
-                    const formData = new FormData(this);
-                    const itemType = formData.get('item-type');
-                    const itemTitle = formData.get('item-title');
-                    const tripName = getCurrentTrip();
+            const addItemForm = document.getElementById('add-item-form');
+            if (addItemForm) {
+                addItemForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
                     
-                    // Gérer les fichiers joints
-                    const fileInput = document.getElementById('item-attachment');
-                    if (fileInput.files.length > 0) {
-                        // Montrer un indicateur de chargement
-                        showLoader('Téléchargement des documents...');
+                    try {
+                        // Récupérer les données du formulaire
+                        const formData = new FormData(this);
+                        const itemType = formData.get('item-type');
+                        const itemTitle = formData.get('item-title');
+                        const tripName = getCurrentTrip();
                         
-                        // Vérifier si l'utilisateur est connecté
-                        if (!driveService.isAuthenticated) {
-                            try {
-                                await driveService.signIn();
-                                await documentManager.initialize();
-                            } catch (error) {
-                                console.error('Erreur lors de la connexion:', error);
-                                showNotification('Erreur de connexion à Google Drive', 'error');
-                                hideLoader();
-                                return;
+                        // Gérer les fichiers joints
+                        const fileInput = document.getElementById('item-attachment');
+                        if (fileInput && fileInput.files.length > 0) {
+                            // Montrer un indicateur de chargement
+                            showLoader('Téléchargement des documents...');
+                            
+                            // Vérifier si l'utilisateur est connecté
+                            if (!driveService.isAuthenticated) {
+                                try {
+                                    await driveService.signIn();
+                                } catch (error) {
+                                    console.error('Erreur lors de la connexion:', error);
+                                    showNotification('Erreur de connexion à Google Drive', 'error');
+                                    hideLoader();
+                                    return;
+                                }
                             }
+                            
+                            // Initialiser le gestionnaire de documents si nécessaire
+                            if (!documentManager.isInitialized) {
+                                await documentManager.initialize();
+                            }
+                            
+                            // Télécharger chaque fichier
+                            for (const file of fileInput.files) {
+                                await documentManager.uploadTripDocument(tripName, file, {
+                                    itemType,
+                                    itemTitle,
+                                    uploadDate: new Date().toISOString(),
+                                    description: formData.get('item-description') || '',
+                                    location: formData.get('item-location') || '',
+                                    date: formData.get('item-date') || ''
+                                });
+                            }
+                            
+                            // Actualiser la liste des documents récents
+                            loadRecentDocuments();
+                            
+                            // Notifier l'utilisateur
+                            showNotification('Documents téléchargés avec succès', 'success');
                         }
                         
-                        // Télécharger le fichier
-                        await documentManager.uploadTripDocument(tripName, fileInput.files[0], {
-                            docType,
-                            docTitle,
-                            uploadDate: new Date().toISOString(),
-                            notes: formData.get('document-notes') || ''
-                        });
+                        // Ajouter l'élément à la chronologie (simulation)
+                        const timeline = document.querySelector('.detail-view.active .timeline');
+                        if (timeline) {
+                            const newItem = document.createElement('div');
+                            newItem.className = 'timeline-item';
+                            newItem.innerHTML = `
+                                <div class="timeline-marker">
+                                    <i class="fas ${getIconForItemType(itemType)}"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="timeline-title">
+                                        <span>${itemTitle}</span>
+                                        <span class="timeline-date">${formatDateTime(formData.get('item-date'))}</span>
+                                    </div>
+                                    <div class="timeline-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>${formData.get('item-location') || 'Lieu non spécifié'}</span>
+                                    </div>
+                                    <div class="timeline-description">
+                                        ${formData.get('item-description') || ''}
+                                    </div>
+                                    ${fileInput && fileInput.files.length > 0 ? '<div class="timeline-attachments">' + 
+                                        Array.from(fileInput.files).map(file => 
+                                            `<a href="#" class="attachment">
+                                                <i class="fas ${file.type.includes('image') ? 'fa-file-image' : file.type.includes('pdf') ? 'fa-file-pdf' : 'fa-file'}"></i>
+                                                <span>${file.name}</span>
+                                            </a>`
+                                        ).join('') + '</div>' : ''}
+                                </div>
+                            `;
+                            timeline.appendChild(newItem);
+                        }
                         
-                        // Actualiser la liste des documents
-                        loadRecentDocuments();
+                        // Fermer la modale
+                        document.getElementById('add-item-modal').style.display = 'none';
+                        
+                        // Réinitialiser le formulaire
+                        this.reset();
+                        
+                        // Vider la prévisualisation des fichiers
+                        const previewContainer = this.querySelector('.file-preview-container');
+                        if (previewContainer) {
+                            previewContainer.innerHTML = '';
+                        }
+                        
+                    } catch (error) {
+                        console.error('Erreur lors de l\'ajout de l\'élément:', error);
+                        showNotification('Erreur lors de l\'ajout de l\'élément', 'error');
+                    } finally {
+                        hideLoader();
+                    }
+                });
+            }
+            
+            // Gérer la soumission du formulaire d'ajout de document
+            const addDocumentForm = document.getElementById('add-document-form');
+            if (addDocumentForm) {
+                addDocumentForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    try {
+                        // Récupérer les données du formulaire
+                        const formData = new FormData(this);
+                        const docType = formData.get('document-type');
+                        const docTitle = formData.get('document-title');
+                        const tripName = formData.get('document-trip') || 'General';
+                        
+                        // Gérer le fichier
+                        const fileInput = document.getElementById('document-file');
+                        if (fileInput && fileInput.files.length > 0) {
+                            // Montrer un indicateur de chargement
+                            showLoader('Téléchargement du document...');
+                            
+                            // Vérifier si l'utilisateur est connecté
+                            if (!driveService.isAuthenticated) {
+                                try {
+                                    await driveService.signIn();
+                                } catch (error) {
+                                    console.error('Erreur lors de la connexion:', error);
+                                    showNotification('Erreur de connexion à Google Drive', 'error');
+                                    hideLoader();
+                                    return;
+                                }
+                            }
+                            
+                            // Initialiser le gestionnaire de documents si nécessaire
+                            if (!documentManager.isInitialized) {
+                                await documentManager.initialize();
+                            }
+                            
+                            // Télécharger le fichier
+                            await documentManager.uploadTripDocument(tripName, fileInput.files[0], {
+                                docType,
+                                docTitle,
+                                uploadDate: new Date().toISOString(),
+                                notes: formData.get('document-notes') || '',
+                                docDate: formData.get('document-date') || ''
+                            });
+                            
+                            // Actualiser les listes de documents
+                            if (document.querySelector('.documents-view.active')) {
+                                loadAllDocuments();
+                            } else {
+                                loadRecentDocuments();
+                            }
+                            
+                            // Notifier l'utilisateur
+                            showNotification('Document téléchargé avec succès', 'success');
+                        }
+                        
+                        // Fermer la modale
+                        document.getElementById('add-document-modal').style.display = 'none';
+                        
+                        // Réinitialiser le formulaire
+                        this.reset();
+                        
+                        // Vider la prévisualisation des fichiers
+                        const previewContainer = this.querySelector('.file-preview-container');
+                        if (previewContainer) {
+                            previewContainer.innerHTML = '';
+                        }
+                        
+                    } catch (error) {
+                        console.error('Erreur lors de l\'ajout du document:', error);
+                        showNotification('Erreur lors de l\'ajout du document', 'error');
+                    } finally {
+                        hideLoader();
+                    }
+                });
+            }
+            
+            // Gérer la soumission du formulaire d'ajout de voyage
+            const addTripForm = document.getElementById('add-trip-form');
+            if (addTripForm) {
+                addTripForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    try {
+                        // Pour l'instant, nous simulons simplement l'ajout d'un voyage
+                        // Dans une application réelle, ces données seraient envoyées à un serveur
+                        
+                        // Récupérer les données du formulaire
+                        const formData = new FormData(this);
+                        const tripTitle = formData.get('trip-title');
                         
                         // Notifier l'utilisateur
-                        showNotification('Document téléchargé avec succès', 'success');
+                        showNotification(`Voyage "${tripTitle}" ajouté avec succès`, 'success');
+                        
+                        // Fermer la modale
+                        document.getElementById('add-trip-modal').style.display = 'none';
+                        
+                        // Réinitialiser le formulaire
+                        this.reset();
+                        
+                        // Vider la prévisualisation de l'image
+                        const previewContainer = this.querySelector('.file-preview-container');
+                        if (previewContainer) {
+                            previewContainer.innerHTML = '';
+                        }
+                        
+                    } catch (error) {
+                        console.error('Erreur lors de l\'ajout du voyage:', error);
+                        showNotification('Erreur lors de l\'ajout du voyage', 'error');
                     }
-                    
-                    // Fermer la modale
-                    document.getElementById('add-document-modal').style.display = 'none';
-                    
-                    // Réinitialiser le formulaire
-                    this.reset();
-                    document.querySelector('#add-document-modal .file-preview-container').innerHTML = '';
-                    
-                } catch (error) {
-                    console.error('Erreur lors de l\'ajout du document:', error);
-                    showNotification('Erreur lors de l\'ajout du document', 'error');
-                } finally {
-                    hideLoader();
-                }
-            });
+                });
+            }
         }
         
-        // Récupérer les documents récents
+        // Récupérer les documents récents pour la page d'accueil
         async function loadRecentDocuments() {
             const documentsContainer = document.querySelector('.documents-container');
             if (!documentsContainer) return;
             
             try {
-                // Vérifier si l'utilisateur est connecté
+                // Vérifier si l'utilisateur est connecté à Google Drive
                 if (!driveService.isAuthenticated) {
                     documentsContainer.innerHTML = `
                         <div class="auth-prompt">
@@ -665,7 +526,11 @@
                         try {
                             showLoader('Connexion à Google Drive...');
                             await driveService.signIn();
-                            await documentManager.initialize();
+                            
+                            if (!documentManager.isInitialized) {
+                                await documentManager.initialize();
+                            }
+                            
                             loadRecentDocuments();
                             hideLoader();
                         } catch (error) {
@@ -684,6 +549,11 @@
                         <p>Chargement des documents...</p>
                     </div>
                 `;
+                
+                // S'assurer que le gestionnaire de documents est initialisé
+                if (!documentManager.isInitialized) {
+                    await documentManager.initialize();
+                }
                 
                 // Récupérer tous les documents
                 const documents = await documentManager.getAllDocuments();
@@ -800,7 +670,11 @@
                         try {
                             showLoader('Connexion à Google Drive...');
                             await driveService.signIn();
-                            await documentManager.initialize();
+                            
+                            if (!documentManager.isInitialized) {
+                                await documentManager.initialize();
+                            }
+                            
                             loadAllDocuments();
                             hideLoader();
                         } catch (error) {
@@ -819,6 +693,11 @@
                         <p>Chargement des documents...</p>
                     </div>
                 `;
+                
+                // S'assurer que le gestionnaire de documents est initialisé
+                if (!documentManager.isInitialized) {
+                    await documentManager.initialize();
+                }
                 
                 // Récupérer tous les documents
                 const documents = await documentManager.getAllDocuments();
@@ -860,6 +739,9 @@
                         iconClass = 'fa-file-excel';
                     }
                     
+                    // Déterminer le type de document
+                    const docType = doc.customMetadata?.docType || 'other';
+                    
                     // Formater la date
                     const modifiedDate = new Date(doc.modifiedTime);
                     const formattedDate = modifiedDate.toLocaleDateString('fr-FR', {
@@ -869,7 +751,7 @@
                     });
                     
                     html += `
-                        <div class="document-item" data-file-id="${doc.id}" data-type="${doc.customMetadata?.docType || 'unknown'}">
+                        <div class="document-item" data-file-id="${doc.id}" data-type="${docType}">
                             <div class="document-icon">
                                 <i class="fas ${iconClass}"></i>
                             </div>
@@ -989,15 +871,15 @@
             return `${day}/${month}, ${hours}:${minutes}`;
         }
         
-        // Add event listeners
+        // Initialisation de l'application
         document.addEventListener('DOMContentLoaded', async function() {
-            // Initialize countdown
+            // Initialiser le compte à rebours
             updateCountdown();
             
-            // Update countdown daily
-            setInterval(updateCountdown, 86400000); // Update every 24 hours
+            // Mettre à jour le compte à rebours quotidiennement
+            setInterval(updateCountdown, 86400000); // Mettre à jour toutes les 24 heures
             
-            // Card click event - navigate to detail view
+            // Événement de clic sur les cartes - navigation vers la vue détaillée
             document.querySelectorAll('.card').forEach(function(card) {
                 card.addEventListener('click', function() {
                     const tripId = this.dataset.trip;
@@ -1007,10 +889,10 @@
                 });
             });
             
-            // Toggle card favorite
+            // Basculer le favori de la carte
             document.querySelectorAll('.card-favorite').forEach(function(favorite) {
                 favorite.addEventListener('click', function(e) {
-                    e.stopPropagation(); // Prevent card click
+                    e.stopPropagation(); // Empêcher le clic sur la carte
                     this.classList.toggle('active');
                     const icon = this.querySelector('i');
                     if (this.classList.contains('active')) {
@@ -1023,21 +905,21 @@
                 });
             });
             
-            // Tab switching
+            // Changement d'onglet
             document.querySelectorAll('.tab').forEach(function(tab) {
                 tab.addEventListener('click', function() {
-                    // Get all tabs in the same container
+                    // Récupérer tous les onglets dans le même conteneur
                     const tabs = this.closest('.tabs').querySelectorAll('.tab');
                     tabs.forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                     
-                    // Filter content based on selected tab
+                    // Filtrer le contenu en fonction de l'onglet sélectionné
                     const filter = this.dataset.filter;
-                    // Add your filtering logic here
+                    // Logique de filtrage à implémenter si nécessaire
                 });
             });
             
-            // Bottom navigation
+            // Navigation inférieure
             document.querySelectorAll('.nav-item[data-view]').forEach(function(navItem) {
                 navItem.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -1053,7 +935,7 @@
                 });
             });
             
-            // Open modal for new trip
+            // Ouvrir la modale pour un nouveau voyage
             document.querySelectorAll('.nav-item[data-modal]').forEach(function(navItem) {
                 navItem.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -1065,22 +947,22 @@
                 });
             });
             
-            // Thumbnail gallery
+            // Galerie de vignettes
             document.querySelectorAll('.thumbnail').forEach(function(thumbnail) {
                 thumbnail.addEventListener('click', function() {
                     document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                     
-                    // Update main image
+                    // Mettre à jour l'image principale
                     const mainImg = this.closest('.detail-header').querySelector('.detail-img');
                     if (mainImg) mainImg.src = this.src;
                 });
             });
             
-            // Modal functionality
+            // Fonctionnalité modale
             const modals = document.querySelectorAll('.modal');
             
-            // Open modal
+            // Ouvrir la modale
             document.querySelectorAll('[data-modal]').forEach(function(button) {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -1090,21 +972,21 @@
                 });
             });
             
-            // Close modal with X button
+            // Fermer la modale avec le bouton X
             document.querySelectorAll('.modal-close').forEach(function(close) {
                 close.addEventListener('click', function() {
                     this.closest('.modal').style.display = 'none';
                 });
             });
             
-            // Close modal with cancel button
-            document.querySelectorAll('#cancel-btn, #cancel-document-btn').forEach(function(button) {
+            // Fermer la modale avec le bouton Annuler
+            document.querySelectorAll('#cancel-btn, #cancel-document-btn, #cancel-trip-btn').forEach(function(button) {
                 button.addEventListener('click', function() {
                     this.closest('.modal').style.display = 'none';
                 });
             });
             
-            // Close modal when clicking outside
+            // Fermer la modale en cliquant à l'extérieur
             window.addEventListener('click', function(event) {
                 modals.forEach(function(modal) {
                     if (event.target === modal) {
@@ -1113,130 +995,39 @@
                 });
             });
             
-            // View all documents link
-            document.getElementById('view-all-docs').addEventListener('click', function(e) {
-                e.preventDefault();
-                showView('documents-view');
-                loadAllDocuments();
-            });
+            // Lien "Voir tous les documents"
+            const viewAllDocsLink = document.getElementById('view-all-docs');
+            if (viewAllDocsLink) {
+                viewAllDocsLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showView('documents-view');
+                    loadAllDocuments();
+                });
+            }
             
             // Initialiser les services Google
             try {
                 // Tenter d'initialiser Google Drive
                 await driveService.initialize();
-                await documentManager.initialize();
                 
-                // Écouteur pour les téléchargements de documents
+                // Configurer les téléchargements de documents
                 setupDocumentUploads();
                 
                 // Récupérer les documents récents
                 loadRecentDocuments();
             } catch (error) {
                 console.error('Erreur lors de l\'initialisation des services Google:', error);
+                showNotification('Erreur de connexion aux services Google', 'error');
             }
         });
     </script>
     
     <!-- Remplacez YOUR_API_KEY par votre clé API Google Maps -->
     <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZaOIKkyuhs9SaEBjqKNXoTvag1w4nQvo&callback=initMap">
     </script>
 </body>
-</html>('Erreur de connexion à Google Drive', 'error');
-                                hideLoader();
-                                return;
-                            }
-                        }
-                        
-                        // Télécharger chaque fichier
-                        for (const file of fileInput.files) {
-                            await documentManager.uploadTripDocument(tripName, file, {
-                                itemType,
-                                itemTitle,
-                                uploadDate: new Date().toISOString()
-                            });
-                        }
-                        
-                        // Actualiser la liste des documents
-                        loadRecentDocuments();
-                        
-                        // Notifier l'utilisateur
-                        showNotification('Documents téléchargés avec succès', 'success');
-                    }
-                    
-                    // Ajouter l'élément à la chronologie (simulation)
-                    const timeline = document.querySelector('.detail-view.active .timeline');
-                    if (timeline) {
-                        const newItem = document.createElement('div');
-                        newItem.className = 'timeline-item';
-                        newItem.innerHTML = `
-                            <div class="timeline-marker">
-                                <i class="fas ${getIconForItemType(itemType)}"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">
-                                    <span>${itemTitle}</span>
-                                    <span class="timeline-date">${formatDateTime(formData.get('item-date'))}</span>
-                                </div>
-                                <div class="timeline-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>${formData.get('item-location') || 'Lieu non spécifié'}</span>
-                                </div>
-                                <div class="timeline-description">
-                                    ${formData.get('item-description') || ''}
-                                </div>
-                                ${fileInput.files.length > 0 ? '<div class="timeline-attachments">' + 
-                                    Array.from(fileInput.files).map(file => 
-                                        `<a href="#" class="attachment">
-                                            <i class="fas fa-file"></i>
-                                            <span>${file.name}</span>
-                                        </a>`
-                                    ).join('') + '</div>' : ''}
-                            </div>
-                        `;
-                        timeline.appendChild(newItem);
-                    }
-                    
-                    // Fermer la modale
-                    document.getElementById('add-item-modal').style.display = 'none';
-                    
-                    // Réinitialiser le formulaire
-                    this.reset();
-                    document.querySelector('.file-preview-container').innerHTML = '';
-                    
-                } catch (error) {
-                    console.error('Erreur lors de l\'ajout de l\'élément:', error);
-                    showNotification('Erreur lors de l\'ajout de l\'élément', 'error');
-                } finally {
-                    hideLoader();
-                }
-            });
-            
-            // Gérer la soumission du formulaire d'ajout de document
-            document.getElementById('add-document-form').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                try {
-                    // Récupérer les données du formulaire
-                    const formData = new FormData(this);
-                    const docType = formData.get('document-type');
-                    const docTitle = formData.get('document-title');
-                    const tripName = formData.get('document-trip') || 'General';
-                    
-                    // Gérer le fichier
-                    const fileInput = document.getElementById('document-file');
-                    if (fileInput.files.length > 0) {
-                        // Montrer un indicateur de chargement
-                        showLoader('Téléchargement du document...');
-                        
-                        // Vérifier si l'utilisateur est connecté
-                        if (!driveService.isAuthenticated) {
-                            try {
-                                await driveService.signIn();
-                                await documentManager.initialize();
-                            } catch (error) {
-                                console.error('Erreur lors de la connexion:', error);
-                                showNotification<!DOCTYPE html>
+</html><!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -1984,7 +1775,7 @@
             right: 0;
             bottom: 0;
             background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
+            display: none;
             justify-content: center;
             align-items: center;
             z-index: 9999;
@@ -2211,676 +2002,3 @@
                 height: 50px;
             }
         }
-    </style>
-</head>
-<body>
-    <div class="app-layout">
-        <div class="content-wrapper">
-            <!-- Home View -->
-            <div class="view home-view active" id="home-view">
-                <header class="header">
-                    <h1 class="header-title">BCP Travels</h1>
-                    <div class="countdown-badge">
-                        <div class="countdown-days">J-18</div>
-                        <div class="countdown-dest">Tokyo</div>
-                    </div>
-                </header>
-                
-                <div class="categories">
-                    <h2 class="categories-title">Mes voyages</h2>
-                    <div class="tabs">
-                        <div class="tab active" data-filter="all">Tous</div>
-                        <div class="tab" data-filter="upcoming">À venir</div>
-                        <div class="tab" data-filter="past">Passés</div>
-                        <div class="tab" data-filter="favorites">Favoris</div>
-                    </div>
-                </div>
-                
-                <div class="cards-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Voyages planifiés</h2>
-                        <a href="#" class="section-action">Voir tout</a>
-                    </div>
-                    
-                    <div class="cards-grid">
-                        <div class="card" data-trip="paris">
-                            <div class="card-img-container">
-                                <img src="https://source.unsplash.com/featured/?paris,eiffel" alt="Paris" class="card-img">
-                                <div class="card-favorite">
-                                    <i class="far fa-heart"></i>
-                                </div>
-                            </div>
-                            <div class="card-content">
-                                <h3 class="card-title">Paris</h3>
-                                <div class="card-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>France</span>
-                                </div>
-                                <div class="card-date">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <span>15 - 22 Jan 2024</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="cards-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Documents récents</h2>
-                        <a href="#" class="section-action" id="view-all-docs">Voir tout</a>
-                    </div>
-                    
-                    <div class="documents-container">
-                        <!-- Les documents seront insérés ici par JavaScript -->
-                        <div class="document-item">
-                            <div class="document-icon">
-                                <i class="fas fa-file-pdf"></i>
-                            </div>
-                            <div class="document-info">
-                                <div class="document-title">Réservation Hôtel Ritz</div>
-                                <div class="document-meta">Paris • 10 Août 2023</div>
-                            </div>
-                            <a href="#" class="document-action">
-                                <i class="fas fa-download"></i>
-                            </a>
-                        </div>
-                        
-                        <div class="document-item">
-                            <div class="document-icon">
-                                <i class="fas fa-file-pdf"></i>
-                            </div>
-                            <div class="document-info">
-                                <div class="document-title">Tickets Vol Paris AF001</div>
-                                <div class="document-meta">New York - Paris • 10 Août 2023</div>
-                            </div>
-                            <a href="#" class="document-action">
-                                <i class="fas fa-download"></i>
-                            </a>
-                        </div>
-                        
-                        <div class="document-item">
-                            <div class="document-icon">
-                                <i class="fas fa-file-pdf"></i>
-                            </div>
-                            <div class="document-info">
-                                <div class="document-title">Tickets Musée du Louvre</div>
-                                <div class="document-meta">Paris • 11 Août 2023</div>
-                            </div>
-                            <a href="#" class="document-action">
-                                <i class="fas fa-download"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Detail View for Paris -->
-            <div class="view detail-view" id="paris-view">
-                <div class="detail-header">
-                    <img src="https://source.unsplash.com/featured/?paris,eiffel" alt="Paris" class="detail-img">
-                    <button class="back-button" onclick="showView('home-view')">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
-                    <button class="action-button">
-                        <i class="far fa-heart"></i>
-                    </button>
-                    <button class="action-button">
-                        <i class="fas fa-share-alt"></i>
-                    </button>
-                    
-                    <div class="thumbnail-gallery">
-                        <img src="https://source.unsplash.com/featured/?paris,eiffel" alt="Paris" class="thumbnail active">
-                        <img src="https://source.unsplash.com/featured/?paris,louvre" alt="Louvre" class="thumbnail">
-                        <img src="https://source.unsplash.com/featured/?paris,arc" alt="Arc de Triomphe" class="thumbnail">
-                        <img src="https://source.unsplash.com/featured/?paris,seine" alt="Seine" class="thumbnail">
-                        <img src="https://source.unsplash.com/featured/?paris,montmartre" alt="Montmartre" class="thumbnail">
-                    </div>
-                </div>
-                
-                <div class="detail-content">
-                    <div class="detail-title">
-                        <span>Paris - Août 2023</span>
-                        <span class="detail-price">6 jours</span>
-                    </div>
-                    <div class="detail-subtitle">France</div>
-                    
-                    <div class="map-container">
-                        <div id="map-paris"></div>
-                    </div>
-                    
-                    <div class="detail-info">
-                        <div class="info-item">
-                            <div class="info-icon">
-                                <i class="fas fa-plane"></i>
-                            </div>
-                            <div class="info-content">
-                                <div class="info-label">Vol aller</div>
-                                <div class="info-value">10 Août 2023 - 08:30</div>
-                            </div>
-                        </div>
-                        
-                        <div class="info-item">
-                            <div class="info-icon">
-                                <i class="fas fa-hotel"></i>
-                            </div>
-                            <div class="info-content">
-                                <div class="info-label">Hébergement</div>
-                                <div class="info-value">Hôtel Ritz Paris</div>
-                            </div>
-                        </div>
-                        
-                        <div class="info-item">
-                            <div class="info-icon">
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
-                            <div class="info-content">
-                                <div class="info-label">Durée</div>
-                                <div class="info-value">10 - 15 Août 2023</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <h3 style="margin: 25px 0 15px;">Chronologie du séjour</h3>
-                    
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-marker">
-                                <i class="fas fa-plane"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">
-                                    <span>Vol Paris-Denpasar</span>
-                                    <span class="timeline-date">11 Déc, 22:45</span>
-                                </div>
-                                <div class="timeline-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Aéroport International de Denpasar</span>
-                                </div>
-                                <div class="timeline-description">
-                                    Vol SQ837 - Escale à Singapour
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="timeline-item">
-                            <div class="timeline-marker">
-                                <i class="fas fa-hotel"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">
-                                    <span>Four Seasons Resort Bali</span>
-                                    <span class="timeline-date">12 Déc, 15:00</span>
-                                </div>
-                                <div class="timeline-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Sayan, Ubud, Bali</span>
-                                </div>
-                                <div class="timeline-description">
-                                    Villa avec piscine privée<br>
-                                    Check-in: 12 Déc - Check-out: 18 Déc
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="timeline-item">
-                            <div class="timeline-marker">
-                                <i class="fas fa-tree"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">
-                                    <span>Randonnée dans les rizières</span>
-                                    <span class="timeline-date">13 Déc, 08:00</span>
-                                </div>
-                                <div class="timeline-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Tegalalang, Ubud</span>
-                                </div>
-                                <div class="timeline-description">
-                                    Randonnée guidée dans les rizières en terrasse<br>
-                                    Durée: 4h
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <button class="btn btn-outline" style="margin-right: 15px;" data-modal="add-item-modal">
-                            <i class="fas fa-edit"></i>
-                            <span>Modifier</span>
-                        </button>
-                        <button class="btn btn-primary" data-modal="add-item-modal">
-                            <i class="fas fa-plus"></i>
-                            <span>Ajouter un élément</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Detail View for Tokyo -->
-            <div class="view detail-view" id="tokyo-view">
-                <div class="detail-header">
-                    <img src="https://source.unsplash.com/featured/?tokyo,japan" alt="Tokyo" class="detail-img">
-                    <button class="back-button" onclick="showView('home-view')">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
-                    <button class="action-button">
-                        <i class="far fa-heart"></i>
-                    </button>
-                    <button class="action-button">
-                        <i class="fas fa-share-alt"></i>
-                    </button>
-                    
-                    <div class="thumbnail-gallery">
-                        <img src="https://source.unsplash.com/featured/?tokyo,japan" alt="Tokyo" class="thumbnail active">
-                        <img src="https://source.unsplash.com/featured/?tokyo,shibuya" alt="Shibuya" class="thumbnail">
-                        <img src="https://source.unsplash.com/featured/?tokyo,temple" alt="Temple" class="thumbnail">
-                        <img src="https://source.unsplash.com/featured/?tokyo,sakura" alt="Sakura" class="thumbnail">
-                    </div>
-                </div>
-                
-                <div class="detail-content">
-                    <div class="detail-title">
-                        
-                        <div class="timeline-item">
-                            <div class="timeline-marker">
-                                <i class="fas fa-plane"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">
-                                    <span>Vol Paris-Rome</span>
-                                    <span class="timeline-date">15 Oct, 10:15</span>
-                                </div>
-                                <div class="timeline-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Terminal 1, Aéroport de Fiumicino</span>
-                                </div>
-                                <div class="timeline-description">
-                                    Vol AZ355 - Classe Économique
-                                </div>
-                                <div class="timeline-attachments">
-                                    <a href="#" class="attachment">
-                                        <i class="fas fa-file-pdf"></i>
-                                        <span>Billet_Rome.pdf</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="timeline-item">
-                            <div class="timeline-marker">
-                                <i class="fas fa-hotel"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">
-                                    <span>Hotel de Russie</span>
-                                    <span class="timeline-date">15 Oct, 14:00</span>
-                                </div>
-                                <div class="timeline-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Via del Babuino, 9, 00187 Roma</span>
-                                </div>
-                                <div class="timeline-description">
-                                    Chambre Deluxe<br>
-                                    Check-in: 15 Oct - Check-out: 20 Oct
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="timeline-item">
-                            <div class="timeline-marker">
-                                <i class="fas fa-monument"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">
-                                    <span>Visite du Colisée</span>
-                                    <span class="timeline-date">16 Oct, 09:30</span>
-                                </div>
-                                <div class="timeline-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Piazza del Colosseo, 1, 00184 Roma</span>
-                                </div>
-                                <div class="timeline-description">
-                                    Visite guidée du Colisée et du Forum Romain<br>
-                                    Durée: 3h
-                                </div>
-                                <div class="timeline-attachments">
-                                    <a href="#" class="attachment">
-                                        <i class="fas fa-file-pdf"></i>
-                                        <span>Tickets_Colisée.pdf</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <button class="btn btn-outline" style="margin-right: 15px;" data-modal="add-item-modal">
-                            <i class="fas fa-edit"></i>
-                            <span>Modifier</span>
-                        </button>
-                        <button class="btn btn-primary" data-modal="add-item-modal">
-                            <i class="fas fa-plus"></i>
-                            <span>Ajouter un élément</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Detail View for Bali -->
-            <div class="view detail-view" id="bali-view">
-                <div class="detail-header">
-                    <img src="https://source.unsplash.com/featured/?bali,beach" alt="Bali" class="detail-img">
-                    <button class="back-button" onclick="showView('home-view')">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
-                    <button class="action-button">
-                        <i class="far fa-heart"></i>
-                    </button>
-                    <button class="action-button">
-                        <i class="fas fa-share-alt"></i>
-                    </button>
-                    
-                    <div class="thumbnail-gallery">
-                        <img src="https://source.unsplash.com/featured/?bali,beach" alt="Plage" class="thumbnail active">
-                        <img src="https://source.unsplash.com/featured/?bali,temple" alt="Temple" class="thumbnail">
-                        <img src="https://source.unsplash.com/featured/?bali,rice" alt="Rizières" class="thumbnail">
-                        <img src="https://source.unsplash.com/featured/?bali,ubud" alt="Ubud" class="thumbnail">
-                    </div>
-                </div>
-                
-                <div class="detail-content">
-                    <div class="detail-title">
-                        <span>Bali - Décembre 2023</span>
-                        <span class="detail-price">7 jours</span>
-                    </div>
-                    <div class="detail-subtitle">Indonésie</div>
-                    
-                    <div class="map-container">
-                        <div id="map-bali"></div>
-                    </div>
-                    
-                    <div class="detail-info">
-                        <div class="info-item">
-                            <div class="info-icon">
-                                <i class="fas fa-plane"></i>
-                            </div>
-                            <div class="info-content">
-                                <div class="info-label">Vol aller</div>
-                                <div class="info-value">11 Déc 2023 - 22:45</div>
-                            </div>
-                        </div>
-                        
-                        <div class="info-item">
-                            <div class="info-icon">
-                                <i class="fas fa-hotel"></i>
-                            </div>
-                            <div class="info-content">
-                                <div class="info-label">Hébergement</div>
-                                <div class="info-value">Four Seasons Resort Bali</div>
-                            </div>
-                        </div>
-                        
-                        <div class="info-item">
-                            <div class="info-icon">
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
-                            <div class="info-content">
-                                <div class="info-label">Durée</div>
-                                <div class="info-value">11 - 18 Déc 2023</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <h3 style="margin: 25px 0 15px;">Chronologie du séjour</h3>
-                    
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-marker">
-                                <i class="fas fa-plane"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">
-                                    <span>Vol New York-Paris</span>
-                                    <span class="timeline-date">10 Août, 08:30</span>
-                                </div>
-                                <div class="timeline-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Terminal 2E, Charles de Gaulle</span>
-                                </div>
-                                <div class="timeline-description">
-                                    Vol AF001 - Classe Affaires
-                                </div>
-                                <div class="timeline-attachments">
-                                    <a href="#" class="attachment">
-                                        <i class="fas fa-file-pdf"></i>
-                                        <span>Carte d'embarquement.pdf</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="timeline-item">
-                            <div class="timeline-marker">
-                                <i class="fas fa-hotel"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">
-                                    <span>Hôtel Ritz Paris</span>
-                                    <span class="timeline-date">10 Août, 14:00</span>
-                                </div>
-                                <div class="timeline-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>15 Place Vendôme, 75001 Paris</span>
-                                </div>
-                                <div class="timeline-description">
-                                    Suite Deluxe avec vue<br>
-                                    Check-in: 10 Août - Check-out: 15 Août
-                                </div>
-                                <div class="timeline-attachments">
-                                    <a href="#" class="attachment">
-                                        <i class="fas fa-file-pdf"></i>
-                                        <span>Confirmation_Ritz.pdf</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="timeline-item">
-                            <div class="timeline-marker">
-                                <i class="fas fa-utensils"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">
-                                    <span>Dîner au Jules Verne</span>
-                                    <span class="timeline-date">10 Août, 20:00</span>
-                                </div>
-                                <div class="timeline-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Tour Eiffel, Avenue Gustave Eiffel</span>
-                                </div>
-                                <div class="timeline-description">
-                                    Restaurant gastronomique avec vue sur Paris<br>
-                                    Réservation pour 2 personnes
-                                </div>
-                                <div class="timeline-attachments">
-                                    <a href="#" class="attachment">
-                                        <i class="fas fa-file-pdf"></i>
-                                        <span>Reservation_Jules_Verne.pdf</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="timeline-item">
-                            <div class="timeline-marker">
-                                <i class="fas fa-hiking"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">
-                                    <span>Visite privée du Louvre</span>
-                                    <span class="timeline-date">11 Août, 09:00</span>
-                                </div>
-                                <div class="timeline-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Musée du Louvre, Rue de Rivoli</span>
-                                </div>
-                                <div class="timeline-description">
-                                    Visite guidée privée du musée avec expert en histoire de l'art<br>
-                                    Durée: 3h
-                                </div>
-                                <div class="timeline-attachments">
-                                    <a href="#" class="attachment">
-                                        <i class="fas fa-file-pdf"></i>
-                                        <span>Tickets_Louvre.pdf</span>
-                                    </a>
-                                    <a href="#" class="attachment">
-                                        <i class="fas fa-file-image"></i>
-                                        <span>Plan_Louvre.jpg</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <button class="btn btn-outline" style="margin-right: 15px;" data-modal="add-item-modal">
-                            <i class="fas fa-edit"></i>
-                            <span>Modifier</span>
-                        </button>
-                        <button class="btn btn-primary" data-modal="add-item-modal">
-                            <i class="fas fa-plus"></i>
-                            <span>Ajouter un élément</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Detail View for Rome -->
-            <div class="view detail-view" id="rome-view">
-                <div class="detail-header">
-                    <img src="https://source.unsplash.com/featured/?rome,colosseum" alt="Rome" class="detail-img">
-                    <button class="back-button" onclick="showView('home-view')">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
-                    <button class="action-button">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                    <button class="action-button">
-                        <i class="fas fa-share-alt"></i>
-                    </button>
-                    
-                    <div class="thumbnail-gallery">
-                        <img src="https://source.unsplash.com/featured/?rome,colosseum" alt="Colisée" class="thumbnail active">
-                        <img src="https://source.unsplash.com/featured/?rome,vatican" alt="Vatican" class="thumbnail">
-                        <img src="https://source.unsplash.com/featured/?rome,trevi" alt="Fontaine de Trevi" class="thumbnail">
-                        <img src="https://source.unsplash.com/featured/?rome,pantheon" alt="Panthéon" class="thumbnail">
-                    </div>
-                </div>
-                
-                <div class="detail-content">
-                    <div class="detail-title">
-                        <span>Rome - Octobre 2023</span>
-                        <span class="detail-price">5 jours</span>
-                    </div>
-                    <div class="detail-subtitle">Italie</div>
-                    
-                    <div class="map-container">
-                        <div id="map-rome"></div>
-                    </div>
-                    
-                    <div class="detail-info">
-                        <div class="info-item">
-                            <div class="info-icon">
-                                <i class="fas fa-plane"></i>
-                            </div>
-                            <div class="info-content">
-                                <div class="info-label">Vol aller</div>
-                                <div class="info-value">15 Oct 2023 - 10:15</div>
-                            </div>
-                        </div>
-                        
-                        <div class="info-item">
-                            <div class="info-icon">
-                                <i class="fas fa-hotel"></i>
-                            </div>
-                            <div class="info-content">
-                                <div class="info-label">Hébergement</div>
-                                <div class="info-value">Hotel de Russie</div>
-                            </div>
-                        </div>
-                        
-                        <div class="info-item">
-                            <div class="info-icon">
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
-                            <div class="info-content">
-                                <div class="info-label">Durée</div>
-                                <div class="info-value">15 - 20 Oct 2023</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <h3 style="margin: 25px 0 15px;">Chronologie du séjour</h3>
-                    
-                    <div class="timeline">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <span>10 - 15 Août 2023</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card" data-trip="rome">
-                            <div class="card-img-container">
-                                <img src="https://source.unsplash.com/featured/?rome,colosseum" alt="Rome" class="card-img">
-                                <div class="card-favorite active">
-                                    <i class="fas fa-heart"></i>
-                                </div>
-                            </div>
-                            <div class="card-content">
-                                <h3 class="card-title">Rome</h3>
-                                <div class="card-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Italie</span>
-                                </div>
-                                <div class="card-date">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <span>15 - 20 Oct 2023</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card" data-trip="bali">
-                            <div class="card-img-container">
-                                <img src="https://source.unsplash.com/featured/?bali,beach" alt="Bali" class="card-img">
-                                <div class="card-favorite">
-                                    <i class="far fa-heart"></i>
-                                </div>
-                            </div>
-                            <div class="card-content">
-                                <h3 class="card-title">Bali</h3>
-                                <div class="card-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Indonésie</span>
-                                </div>
-                                <div class="card-date">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <span>11 - 18 Déc 2023</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card" data-trip="tokyo">
-                            <div class="card-img-container">
-                                <img src="https://source.unsplash.com/featured/?tokyo,japan" alt="Tokyo" class="card-img">
-                                <div class="card-favorite">
-                                    <i class="far fa-heart"></i>
-                                </div>
-                            </div>
-                            <div class="card-content">
-                                <h3 class="card-title">Tokyo</h3>
-                                <div class="card-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Japon</span>
-                                </div>
-                                <div class="card-date">
