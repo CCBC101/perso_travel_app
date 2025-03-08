@@ -1,256 +1,227 @@
-// Fichier: google-drive-service.js
+// Fichier: document-manager.js
 
-// Paramètres pour l'API Google Drive
-const DRIVE_API_CONFIG = {
-  apiKey: 'AIzaSyAZaOIKkyuhs9SaEBjqKNXoTvag1w4nQvo', // Vous devrez remplacer ceci par votre API Key
-  clientId: '182976407425-5cbitjlrgvbm5l7iteop4tv1danppi7r.apps.googleusercontent.com', // Votre Client ID
-  discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
-  scope: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.appdata'
-};
-
-// Classe de service pour Google Drive
-class GoogleDriveService {
-  constructor() {
-    this.isAuthenticated = false;
+// Classe pour gérer les documents de voyage
+class DocumentManager {
+  constructor(driveService) {
+    this.driveService = driveService;
+    this.rootFolderId = null;
+    this.tripFolders = {};
     this.isInitialized = false;
-    this.authInstance = null;
   }
 
-  // Initialiser le service Google Drive
+  // Initialiser le gestionnaire de documents
   async initialize() {
     if (this.isInitialized) return;
 
     try {
-      await this.loadGapiClient();
+      console.log('Tentative d\'initialisation du Document Manager...');
+      
+      // Vérifier que le service Drive est prêt
+      if (!this.driveService.isInitialized) {
+        await this.driveService.initialize();
+      }
+
+      // Créer ou récupérer le dossier racine pour l'application
+      await this.getOrCreateRootFolder();
+      
       this.isInitialized = true;
-      console.log('Service Google Drive initialisé');
+      console.log('Document Manager initialisé avec succès');
     } catch (error) {
-      console.error('Erreur lors de l\'initialisation du service Google Drive:', error);
+      console.error('Erreur lors de l\'initialisation du Document Manager:', error);
       throw error;
     }
   }
 
-  // Charger le client GAPI
-  loadGapiClient() {
-    return new Promise((resolve, reject) => {
-      gapi.load('client:auth2', async () => {
-        try {
-          await gapi.client.init({
-            apiKey: DRIVE_API_CONFIG.apiKey,
-            clientId: DRIVE_API_CONFIG.clientId,
-            discoveryDocs: DRIVE_API_CONFIG.discoveryDocs,
-            scope: DRIVE_API_CONFIG.scope
-          });
-          
-          this.authInstance = gapi.auth2.getAuthInstance();
-          this.isAuthenticated = this.authInstance.isSignedIn.get();
-          
-          // Écouter les changements d'état de connexion
-          this.authInstance.isSignedIn.listen(isSignedIn => {
-            this.isAuthenticated = isSignedIn;
-            console.log('État d\'authentification modifié:', isSignedIn);
-            
-            // Vous pourriez déclencher un événement personnalisé ici
-            const event = new CustomEvent('driveAuthChanged', { detail: { isSignedIn } });
-            document.dispatchEvent(event);
-          });
-          
-          resolve();
-        } catch (error) {
-          reject(error);
+  // Obtenir ou créer le dossier racine
+  async getOrCreateRootFolder() {
+    try {
+      // Rechercher d'abord si le dossier existe déjà
+      const query = "name = 'BCP Travels' and mimeType = 'application/vnd.google-apps.folder' and trashed = false";
+      const files = await this.driveService.listFiles(null, query);
+      
+      if (files.length > 0) {
+        this.rootFolderId = files[0].id;
+        console.log('Dossier racine existant récupéré:', this.rootFolderId);
+        return this.rootFolderId;
+      }
+      
+      // Créer le dossier s'il n'existe pas
+      const folderMetadata = await this.driveService.createFolder('BCP Travels');
+      this.rootFolderId = folderMetadata.id;
+      console.log('Nouveau dossier racine créé:', this.rootFolderId);
+      return this.rootFolderId;
+    } catch (error) {
+      console.error('Erreur lors de la récupération/création du dossier racine:', error);
+      throw error;
+    }
+  }
+
+  // Obtenir ou créer un dossier pour un voyage spécifique
+  async getOrCreateTripFolder(tripName) {
+    // Vérifier si nous avons déjà l'ID du dossier en cache
+    if (this.tripFolders[tripName]) {
+      return this.tripFolders[tripName];
+    }
+    
+    try {
+      // S'assurer que le dossier racine existe
+      if (!this.rootFolderId) {
+        await this.getOrCreateRootFolder();
+      }
+      
+      // Rechercher le dossier du voyage
+      const query = `name = '${tripName}' and mimeType = 'application/vnd.google-apps.folder' and '${this.rootFolderId}' in parents and trashed = false`;
+      const files = await this.driveService.listFiles(this.rootFolderId, query);
+      
+      if (files.length > 0) {
+        this.tripFolders[tripName] = files[0].id;
+        return files[0].id;
+      }
+      
+      // Créer le dossier du voyage s'il n'existe pas
+      const folderMetadata = await this.driveService.createFolder(tripName, this.rootFolderId);
+      this.tripFolders[tripName] = folderMetadata.id;
+      return folderMetadata.id;
+    } catch (error) {
+      console.error(`Erreur lors de la récupération/création du dossier pour ${tripName}:`, error);
+      throw error;
+    }
+  }
+
+  // Télécharger un document et l'associer à un voyage
+  async uploadTripDocument(tripName, file, metadata = {}) {
+    try {
+      // S'assurer que le Document Manager est initialisé
+      if (!this.isInitialized) {
+        await this.initialize();
+      }
+      
+      // Obtenir l'ID du dossier du voyage
+      const tripFolderId = await this.getOrCreateTripFolder(tripName);
+      
+      // Télécharger le fichier vers Google Drive
+      const fileData = await this.driveService.uploadFile(file, tripFolderId);
+      
+      // Ajouter des propriétés personnalisées au fichier (comme des métadonnées)
+      // (Note: Cette fonctionnalité n'est pas directement disponible via l'API Drive v3 standard,
+      // mais nous pouvons stocker les métadonnées dans une description ou un commentaire)
+      
+      // Pour le moment, associons simplement le voyage au fichier de manière interne
+      fileData.tripName = tripName;
+      fileData.customMetadata = metadata;
+      
+      return fileData;
+    } catch (error) {
+      console.error('Erreur lors du téléchargement du document:', error);
+      throw error;
+    }
+  }
+
+  // Récupérer tous les documents de voyage
+  async getAllDocuments() {
+    try {
+      // S'assurer que le Document Manager est initialisé
+      if (!this.isInitialized) {
+        await this.initialize();
+      }
+      
+      // S'assurer que le dossier racine existe
+      if (!this.rootFolderId) {
+        await this.getOrCreateRootFolder();
+      }
+      
+      // Rechercher tous les fichiers dans tous les sous-dossiers de voyage
+      const query = `'${this.rootFolderId}' in parents or '${this.rootFolderId}' in ancestors and trashed = false`;
+      const files = await this.driveService.listFiles(null, query);
+      
+      // Enrichir les fichiers avec des informations sur le voyage
+      const enrichedFiles = await Promise.all(files.map(async (file) => {
+        // Si c'est un dossier, on ignore
+        if (file.mimeType === 'application/vnd.google-apps.folder') {
+          return null;
         }
-      });
-    });
-  }
-
-  // Se connecter à Google Drive
-  async signIn() {
-    if (!this.isInitialized) await this.initialize();
-    
-    if (!this.isAuthenticated) {
-      try {
-        await this.authInstance.signIn();
-        return true;
-      } catch (error) {
-        console.error('Erreur lors de la connexion:', error);
-        throw error;
-      }
-    }
-    
-    return this.isAuthenticated;
-  }
-
-  // Se déconnecter de Google Drive
-  async signOut() {
-    if (!this.isInitialized) await this.initialize();
-    
-    if (this.isAuthenticated) {
-      try {
-        await this.authInstance.signOut();
-        return true;
-      } catch (error) {
-        console.error('Erreur lors de la déconnexion:', error);
-        throw error;
-      }
-    }
-    
-    return !this.isAuthenticated;
-  }
-
-  // Créer un dossier
-  async createFolder(folderName, parentFolderId = null) {
-    if (!this.isAuthenticated) await this.signIn();
-    
-    const fileMetadata = {
-      name: folderName,
-      mimeType: 'application/vnd.google-apps.folder'
-    };
-    
-    if (parentFolderId) {
-      fileMetadata.parents = [parentFolderId];
-    }
-    
-    try {
-      const response = await gapi.client.drive.files.create({
-        resource: fileMetadata,
-        fields: 'id, name, webViewLink'
-      });
+        
+        // Déterminer à quel voyage ce document appartient en vérifiant le dossier parent
+        const tripName = await this.getTripNameForFile(file.id);
+        file.tripName = tripName;
+        
+        // Ici, on pourrait également récupérer des métadonnées personnalisées si elles sont stockées
+        
+        return file;
+      }));
       
-      return response.result;
+      // Filtrer les dossiers et les éléments nuls
+      return enrichedFiles.filter(file => file !== null);
     } catch (error) {
-      console.error('Erreur lors de la création du dossier:', error);
+      console.error('Erreur lors de la récupération des documents:', error);
       throw error;
     }
   }
 
-  // Télécharger un fichier vers Google Drive
-  async uploadFile(file, folderId = null, onProgress = null) {
-    if (!this.isAuthenticated) await this.signIn();
-    
-    const metadata = {
-      name: file.name,
-      mimeType: file.type
-    };
-    
-    if (folderId) {
-      metadata.parents = [folderId];
-    }
-    
+  // Récupérer le nom du voyage pour un fichier donné
+  async getTripNameForFile(fileId) {
     try {
-      // Initialiser le téléchargement
-      const initResponse = await gapi.client.drive.files.create({
-        resource: metadata,
-        fields: 'id'
-      });
+      // Récupérer tous les dossiers de voyage
+      const query = `mimeType = 'application/vnd.google-apps.folder' and '${this.rootFolderId}' in parents and trashed = false`;
+      const folders = await this.driveService.listFiles(null, query);
       
-      const fileId = initResponse.result.id;
-      
-      // Lire le contenu du fichier
-      const content = await this.readFileContent(file);
-      
-      // Télécharger le contenu du fichier
-      const uploadResponse = await fetch(
-        `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${gapi.auth.getToken().access_token}`,
-            'Content-Type': file.type
-          },
-          body: content
+      // Pour chaque dossier de voyage, vérifier si le fichier s'y trouve
+      for (const folder of folders) {
+        const fileQuery = `'${folder.id}' in parents and id = '${fileId}' and trashed = false`;
+        const files = await this.driveService.listFiles(null, fileQuery);
+        
+        if (files.length > 0) {
+          return folder.name;
         }
-      );
-      
-      if (!uploadResponse.ok) {
-        throw new Error(`Erreur lors du téléchargement: ${uploadResponse.statusText}`);
       }
       
-      // Récupérer les informations complètes du fichier
-      const fileResponse = await gapi.client.drive.files.get({
-        fileId: fileId,
-        fields: 'id, name, webViewLink, webContentLink, mimeType, size'
+      // Si le fichier n'est pas dans un dossier de voyage spécifique
+      return 'General';
+    } catch (error) {
+      console.error(`Erreur lors de la récupération du voyage pour le fichier ${fileId}:`, error);
+      return 'Unknown';
+    }
+  }
+
+  // Récupérer les documents pour un voyage spécifique
+  async getTripDocuments(tripName) {
+    try {
+      // S'assurer que le Document Manager est initialisé
+      if (!this.isInitialized) {
+        await this.initialize();
+      }
+      
+      // Obtenir l'ID du dossier du voyage
+      const tripFolderId = await this.getOrCreateTripFolder(tripName);
+      
+      // Récupérer tous les fichiers dans ce dossier
+      const files = await this.driveService.listFiles(tripFolderId);
+      
+      // Ajouter le nom du voyage à chaque fichier
+      files.forEach(file => {
+        file.tripName = tripName;
       });
       
-      return fileResponse.result;
+      return files;
     } catch (error) {
-      console.error('Erreur lors du téléchargement du fichier:', error);
+      console.error(`Erreur lors de la récupération des documents pour ${tripName}:`, error);
       throw error;
     }
   }
 
-  // Lire le contenu d'un fichier
-  readFileContent(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      
-      reader.onload = e => resolve(e.target.result);
-      reader.onerror = e => reject(e.target.error);
-      
-      reader.readAsArrayBuffer(file);
-    });
-  }
-
-  // Lister les fichiers dans un dossier
-  async listFiles(folderId = null, query = null) {
-    if (!this.isAuthenticated) await this.signIn();
-    
-    let queryString = '';
-    
-    if (folderId) {
-      queryString = `'${folderId}' in parents`;
-    }
-    
-    if (query) {
-      queryString = queryString ? `${queryString} and ${query}` : query;
-    }
-    
+  // Supprimer un document
+  async deleteDocument(fileId) {
     try {
-      const response = await gapi.client.drive.files.list({
-        q: queryString,
-        fields: 'files(id, name, mimeType, webViewLink, webContentLink, createdTime, modifiedTime, size, thumbnailLink)',
-        orderBy: 'modifiedTime desc'
-      });
-      
-      return response.result.files;
-    } catch (error) {
-      console.error('Erreur lors de la récupération des fichiers:', error);
-      throw error;
-    }
-  }
-
-  // Télécharger un fichier depuis Google Drive
-  async downloadFile(fileId) {
-    if (!this.isAuthenticated) await this.signIn();
-    
-    try {
-      const response = await gapi.client.drive.files.get({
-        fileId: fileId,
-        alt: 'media'
-      });
-      
-      return response.body;
-    } catch (error) {
-      console.error('Erreur lors du téléchargement du fichier:', error);
-      throw error;
-    }
-  }
-
-  // Supprimer un fichier ou un dossier
-  async deleteFile(fileId) {
-    if (!this.isAuthenticated) await this.signIn();
-    
-    try {
-      await gapi.client.drive.files.delete({
-        fileId: fileId
-      });
-      
+      await this.driveService.deleteFile(fileId);
       return true;
     } catch (error) {
-      console.error('Erreur lors de la suppression du fichier:', error);
+      console.error(`Erreur lors de la suppression du document ${fileId}:`, error);
       throw error;
     }
   }
 }
 
-// Créer et exporter une instance du service
-const driveService = new GoogleDriveService();
+// Créer et exporter une instance du Document Manager
+const documentManager = new DocumentManager(driveService);
+
+console.log('Module Document Manager chargé');
