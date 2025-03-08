@@ -3,29 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Compagnon de Voyage</title>
+    <title>Luxury Travel Companion</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-    --primary-color: #0A3D62;    /* Bleu marine profond */
-    --secondary-color: #3282B8;  /* Bleu ciel */
-    --accent-color: #F0B35F;     /* Or doux */
-    --dark-color: #1B1464;       /* Bleu nuit */
-    --light-color: #F0F6FA;      /* Blanc azuré */
-    --danger-color: #C8302A;     /* Rouge sombre élégant */
+            --primary-color: #0A3D62;    /* Bleu marine profond */
+            --secondary-color: #3282B8;  /* Bleu ciel */
+            --accent-color: #F0B35F;     /* Or doux */
+            --dark-color: #1B1464;       /* Bleu nuit */
+            --light-color: #F0F6FA;      /* Blanc azuré */
+            --danger-color: #C8302A;     /* Rouge sombre élégant */
+            --gold: #D4AF37;             /* Or premium */
+            --silver: #C0C0C0;           /* Argent élégant */
+            --text-dark: #1A1A2E;        /* Texte foncé */
+            --text-light: #E8F1F5;       /* Texte clair */
         }
         
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
             background-color: var(--light-color);
-            color: #333;
+            color: var(--text-dark);
             line-height: 1.6;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
         }
         
         .container {
@@ -34,71 +44,193 @@
             padding: 20px;
         }
         
+        /* Header and Banner */
         header {
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 20px 0;
-            margin-bottom: 30px;
+            background-color: var(--primary-color);
+            padding: 0;
+            margin-bottom: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .banner-container {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(10, 61, 98, 0.7), rgba(27, 20, 100, 0.7));
+            z-index: 1;
+        }
+        
+        .banner-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 20s ease-out;
+        }
+        
+        .banner-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 20px;
+            color: white;
         }
         
         h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+        }
+        
+        .banner-subtitle {
+            font-size: 20px;
+            font-weight: 300;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+        
+        .banner-destination {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: rgba(240, 179, 95, 0.8);
             color: var(--primary-color);
-            text-align: center;
+            border-radius: 30px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin-top: 15px;
         }
         
-        .section-title {
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-            margin: 30px 0 20px;
-            color: var(--dark-color);
+        /* Main Content */
+        .main-content {
+            background-color: white;
+            margin-top: 0;
+            padding-top: 30px;
+            padding-bottom: 50px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            border-radius: 0 0 8px 8px;
         }
         
+        /* Trip Selector */
         .trip-selector {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         
         .trip-selector select {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 12px 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
             font-size: 16px;
             flex-grow: 1;
-            margin-right: 10px;
+            margin-right: 15px;
+            font-family: 'Montserrat', sans-serif;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230A3D62' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        .trip-selector select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(240, 179, 95, 0.2);
         }
         
         .btn {
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+            padding: 12px 24px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .btn i {
+            margin-right: 8px;
         }
         
         .btn:hover {
             background-color: var(--dark-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
         
         .btn-secondary {
             background-color: var(--secondary-color);
         }
         
+        .btn-accent {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+        
         .btn-danger {
             background-color: var(--danger-color);
         }
         
+        /* Section title */
+        .section-title {
+            margin: 40px 0 25px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            color: var(--primary-color);
+        }
+        
+        .section-title h2 {
+            font-size: 28px;
+            font-weight: 600;
+            padding-bottom: 5px;
+            margin-right: 15px;
+        }
+        
+        .section-title:after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, var(--accent-color), transparent);
+        }
+        
+        /* Map Container */
         .map-container {
-            height: 400px;
-            background-color: #eee;
-            margin-bottom: 30px;
-            border-radius: 8px;
+            height: 500px;
+            background-color: #f7f7f7;
+            margin-bottom: 40px;
+            border-radius: 12px;
             overflow: hidden;
             position: relative;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
         }
         
         #map {
@@ -106,60 +238,155 @@
             width: 100%;
         }
         
+        /* Tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            background-color: white;
+            border-radius: 50px;
+            padding: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 3px 8px rgba(10, 61, 98, 0.3);
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: rgba(10, 61, 98, 0.1);
+        }
+        
+        .tab i {
+            margin-right: 10px;
+        }
+        
+        /* Timeline */
         .timeline {
             position: relative;
             margin: 40px 0;
-            padding-left: 50px;
+            padding-left: 60px;
         }
         
         .timeline::before {
             content: '';
             position: absolute;
-            left: 20px;
+            left: 30px;
             top: 0;
             bottom: 0;
-            width: 4px;
-            background-color: var(--primary-color);
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent-color), var(--primary-color));
         }
         
         .timeline-item {
             position: relative;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .timeline-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
         
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -54px;
-            top: 20px;
-            width: 20px;
-            height: 20px;
+            left: -64px;
+            top: 25px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             background-color: var(--accent-color);
             border: 4px solid var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1;
         }
         
         .timeline-item h3 {
             color: var(--primary-color);
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            font-size: 22px;
         }
         
         .timeline-date {
-            color: #777;
+            color: var(--secondary-color);
             font-size: 14px;
+            font-weight: 500;
+            background-color: rgba(50, 130, 184, 0.1);
+            padding: 5px 10px;
+            border-radius: 20px;
         }
         
         .timeline-icon {
-            margin-right: 10px;
-            color: var(--primary-color);
+            margin-right: 15px;
+            color: var(--accent-color);
+            font-size: 20px;
+            width: 30px;
+            text-align: center;
         }
         
+        .timeline-item p {
+            margin-bottom: 10px;
+            padding-left: 45px;
+            color: #555;
+        }
+        
+        .timeline-item strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        /* Attachments */
+        .attachments {
+            margin-top: 20px;
+            padding-left: 45px;
+        }
+        
+        .attachment {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: rgba(10, 61, 98, 0.05);
+            border-radius: 20px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: var(--primary-color);
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        
+        .attachment:hover {
+            background-color: rgba(10, 61, 98, 0.1);
+            border-color: var(--accent-color);
+            cursor: pointer;
+        }
+        
+        .attachment i {
+            margin-right: 8px;
+            color: var(--accent-color);
+        }
+        
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -169,198 +396,234 @@
             height: 100%;
             background-color: rgba(0,0,0,0.7);
             z-index: 1000;
+            backdrop-filter: blur(5px);
         }
         
         .modal-content {
             background-color: white;
-            margin: 10% auto;
-            padding: 20px;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 8px;
+            margin: 5% auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 700px;
+            border-radius: 12px;
             position: relative;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+            animation: modalFadeIn 0.3s;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 28px;
         }
         
         .close {
             position: absolute;
             right: 20px;
-            top: 10px;
+            top: 20px;
             font-size: 28px;
             cursor: pointer;
+            color: var(--primary-color);
+            transition: all 0.3s;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
         
+        .close:hover {
+            color: var(--danger-color);
+            background-color: rgba(200, 48, 42, 0.1);
+        }
+        
+        /* Form */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: bold;
+            font-weight: 500;
+            color: var(--primary-color);
         }
         
-        .form-group input, .form-group select, .form-group textarea {
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
             font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(240, 179, 95, 0.2);
+        }
+        
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230A3D62' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 15px;
         }
         
         .form-group textarea {
-            height: 100px;
+            height: 120px;
+            resize: vertical;
+        }
+        
+        .form-group input[type="file"] {
+            padding: 10px;
+            background-color: rgba(10, 61, 98, 0.05);
         }
         
         .form-actions {
             display: flex;
             justify-content: flex-end;
-            margin-top: 20px;
+            margin-top: 30px;
+            gap: 15px;
         }
         
-        .form-actions button {
-            margin-left: 10px;
-        }
-        
-        .attachments {
-            margin-top: 15px;
-        }
-        
-        .attachment {
-            display: inline-block;
-            padding: 5px 10px;
-            background-color: #f0f0f0;
-            border-radius: 4px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        
-        .attachment i {
-            margin-right: 5px;
-        }
-        
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 20px;
-        }
-        
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-        }
-        
-        .tab.active {
-            border-bottom: 3px solid var(--primary-color);
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-        
+        /* Media Queries */
         @media (max-width: 768px) {
+            .banner-container {
+                height: 250px;
+            }
+            
+            h1 {
+                font-size: 32px;
+            }
+            
+            .banner-subtitle {
+                font-size: 16px;
+            }
+            
+            .trip-selector {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .trip-selector select {
+                width: 100%;
+                margin-right: 0;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
             .timeline {
                 padding-left: 40px;
             }
             
             .timeline-item {
-                padding: 15px;
+                padding: 20px;
             }
             
             .timeline-item::before {
                 left: -44px;
             }
             
+            .timeline-item h3 {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .timeline-item p {
+                padding-left: 0;
+            }
+            
+            .attachments {
+                padding-left: 0;
+            }
+            
             .modal-content {
                 width: 95%;
                 margin: 5% auto;
+                padding: 20px;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+                padding: 5px;
+            }
+            
+            .tab {
+                padding: 10px 15px;
+                white-space: nowrap;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="container">
-            <h1>Mon Compagnon de Voyage</h1>
+        <div class="banner-container">
+            <img id="banner-image" class="banner-image" src="" alt="Destination">
+            <div class="banner-overlay"></div>
+            <div class="banner-content">
+                <h1>Luxury Travel Companion</h1>
+                <p class="banner-subtitle">Planifiez vos voyages d'exception</p>
+                <div id="current-destination" class="banner-destination">
+                    <i class="fas fa-map-marker-alt"></i> Sélectionnez une destination
+                </div>
+            </div>
         </div>
     </header>
     
-    <div class="container">
+    <div class="container main-content">
         <div class="trip-selector">
             <select id="trip-select">
                 <option value="">Sélectionnez un voyage</option>
-                <option value="paris2023">Paris - Août 2023</option>
-                <option value="rome2023">Rome - Octobre 2023</option>
+                <option value="paris" data-destination="Paris">Paris - Août 2023</option>
+                <option value="rome" data-destination="Rome">Rome - Octobre 2023</option>
+                <option value="bali" data-destination="Bali">Bali - Décembre 2023</option>
             </select>
-            <button class="btn" id="new-trip-btn">Nouveau Voyage</button>
+            <button class="btn" id="new-trip-btn"><i class="fas fa-plus"></i> Nouveau Voyage</button>
         </div>
         
-        <h2 class="section-title">Carte de l'itinéraire</h2>
+        <div class="section-title">
+            <h2>Carte de l'itinéraire</h2>
+        </div>
         <div class="map-container">
             <div id="map"></div>
         </div>
         
         <div class="tabs">
-            <div class="tab active" data-tab="timeline">Chronologie</div>
-            <div class="tab" data-tab="flights">Vols</div>
-            <div class="tab" data-tab="accommodations">Hébergements</div>
-            <div class="tab" data-tab="activities">Activités</div>
-            <div class="tab" data-tab="restaurants">Restaurants</div>
+            <div class="tab active" data-tab="timeline"><i class="fas fa-stream"></i> Chronologie</div>
+            <div class="tab" data-tab="flights"><i class="fas fa-plane"></i> Vols</div>
+            <div class="tab" data-tab="accommodations"><i class="fas fa-hotel"></i> Hébergements</div>
+            <div class="tab" data-tab="activities"><i class="fas fa-hiking"></i> Activités</div>
+            <div class="tab" data-tab="restaurants"><i class="fas fa-utensils"></i> Restaurants</div>
         </div>
         
         <div id="timeline-container">
-            <h2 class="section-title">Chronologie du séjour 
-                <button class="btn" id="add-item-btn" style="float:right;font-size:14px;">
+            <div class="section-title">
+                <h2>Chronologie du séjour</h2>
+                <button class="btn btn-accent" id="add-item-btn" style="margin-left: 20px; font-size:14px;">
                     <i class="fas fa-plus"></i> Ajouter
                 </button>
-            </h2>
+            </div>
             
-            <div class="timeline">
-                <!-- Timeline items will be loaded here -->
-                <div class="timeline-item">
-                    <h3>
-                        <span><i class="fas fa-plane-departure timeline-icon"></i> Vol Paris-Rome</span>
-                        <span class="timeline-date">15 Oct 2023, 10:30</span>
-                    </h3>
-                    <p>Vol AF1204 - Terminal 2E</p>
-                    <p><strong>Durée:</strong> 2h15</p>
-                    <div class="attachments">
-                        <div class="attachment"><i class="fas fa-file-pdf"></i> Carte d'embarquement</div>
-                    </div>
-                </div>
-                
-                <div class="timeline-item">
-                    <h3>
-                        <span><i class="fas fa-hotel timeline-icon"></i> Hôtel Roma Luxe</span>
-                        <span class="timeline-date">15 Oct 2023, 14:00</span>
-                    </h3>
-                    <p>Via del Corso, 114, Rome</p>
-                    <p><strong>Check-in:</strong> 15 Oct 14:00 - <strong>Check-out:</strong> 20 Oct 11:00</p>
-                    <p><strong>Réservation #:</strong> RL789456</p>
-                    <div class="attachments">
-                        <div class="attachment"><i class="fas fa-file-pdf"></i> Confirmation</div>
-                    </div>
-                </div>
-                
-                <div class="timeline-item">
-                    <h3>
-                        <span><i class="fas fa-utensils timeline-icon"></i> Ristorante Da Mario</span>
-                        <span class="timeline-date">15 Oct 2023, 20:00</span>
-                    </h3>
-                    <p>Via dei Gracchi, 55, Rome</p>
-                    <p><strong>Réservation:</strong> 2 personnes</p>
-                </div>
-                
-                <div class="timeline-item">
-                    <h3>
-                        <span><i class="fas fa-monument timeline-icon"></i> Visite Colisée</span>
-                        <span class="timeline-date">16 Oct 2023, 09:30</span>
-                    </h3>
-                    <p>Visite guidée du Colisée et du Forum Romain</p>
-                    <p><strong>Durée:</strong> 3h</p>
-                    <div class="attachments">
-                        <div class="attachment"><i class="fas fa-ticket-alt"></i> Tickets</div>
-                    </div>
-                </div>
+            <div class="timeline" id="timeline-content">
+                <!-- Timeline items will be loaded here dynamically -->
             </div>
         </div>
     </div>
@@ -441,59 +704,584 @@
                 
                 <div class="form-group">
                     <label for="trip-destination">Destination principale</label>
-                    <input type="text" id="trip-destination" required>
+                    <input type="text" id="trip-destination" required placeholder="Ex: Paris, Rome, Bali...">
                 </div>
                 
                 <div class="form-actions">
                     <button type="button" class="btn btn-danger" id="cancel-trip-btn">Annuler</button>
-                    <button type="submit" class="btn btn-secondary">Créer</button>
+                    <button type="submit" class="btn btn-accent">Créer</button>
                 </div>
             </form>
         </div>
     </div>
     
     <script>
-        // Initialize the map
+        // Global variables
         let map;
         let markers = [];
+        let currentTrip = null;
+        const destinationImages = {
+            'Paris': 'https://source.unsplash.com/featured/?paris,landmark',
+            'Rome': 'https://source.unsplash.com/featured/?rome,colosseum',
+            'Bali': 'https://source.unsplash.com/featured/?bali,beach',
+            'default': 'https://source.unsplash.com/featured/?travel,luxury'
+        };
         
+        // Sample trips data for demo purposes
+        const tripsData = {
+            'paris': {
+                name: 'Paris - Août 2023',
+                destination: 'Paris',
+                center: { lat: 48.8566, lng: 2.3522 },
+                items: [
+                    {
+                        type: 'flight',
+                        title: 'Vol New York-Paris',
+                        date: '2023-08-10T08:30',
+                        location: 'Terminal 2E, Charles de Gaulle',
+                        description: 'Vol AF001 - Classe Affaires',
+                        attachments: ['Carte d\'embarquement.pdf'],
+                        position: { lat: 49.0097, lng: 2.5479 }
+                    },
+                    {
+                        type: 'accommodation',
+                        title: 'Hôtel Ritz Paris',
+                        date: '2023-08-10T14:00',
+                        location: '15 Place Vendôme, 75001 Paris',
+                        description: 'Suite Deluxe avec vue\nCheck-in: 10 Août - Check-out: 15 Août',
+                        attachments: ['Confirmation_Ritz.pdf'],
+                        position: { lat: 48.8683, lng: 2.3282 }
+                    },
+                    {
+                        type: 'restaurant',
+                        title: 'Dîner au Jules Verne',
+                        date: '2023-08-10T20:00',
+                        location: 'Tour Eiffel, Avenue Gustave Eiffel',
+                        description: 'Restaurant gastronomique avec vue sur Paris\nRéservation pour 2 personnes',
+                        position: { lat: 48.8583, lng: 2.2944 }
+                    },
+                    {
+                        type: 'activity',
+                        title: 'Visite privée du Louvre',
+                        date: '2023-08-11T09:00',
+                        location: 'Musée du Louvre, Rue de Rivoli',
+                        description: 'Visite guidée privée du musée avec expert en histoire de l\'art\nDurée: 3h',
+                        attachments: ['Tickets_Louvre.pdf'],
+                        position: { lat: 48.8606, lng: 2.3376 }
+                    }
+                ]
+            },
+            'rome': {
+                name: 'Rome - Octobre 2023',
+                destination: 'Rome',
+                center: { lat: 41.9028, lng: 12.4964 },
+                items: [
+                    {
+                        type: 'flight',
+                        title: 'Vol Paris-Rome',
+                        date: '2023-10-15T10:30',
+                        location: 'Terminal 1, Fiumicino',
+                        description: 'Vol AZ335 - Première Classe',
+                        attachments: ['Boarding_Pass_Rome.pdf'],
+                        position: { lat: 41.8002, lng: 12.2388 }
+                    },
+                    {
+                        type: 'accommodation',
+                        title: 'Hôtel Roma Luxe',
+                        date: '2023-10-15T14:00',
+                        location: 'Via del Corso, 114, Rome',
+                        description: 'Suite Présidentielle\nCheck-in: 15 Oct - Check-out: 20 Oct',
+                        attachments: ['Confirmation_Roma_Luxe.pdf'],
+                        position: { lat: 41.9028, lng: 12.4964 }
+                    },
+                    {
+                        type: 'restaurant',
+                        title: 'Ristorante Da Mario',
+                        date: '2023-10-15T20:00',
+                        location: 'Via dei Gracchi, 55, Rome',
+                        description: 'Cuisine italienne authentique\nRéservation pour 2 personnes',
+                        position: { lat: 41.8902, lng: 12.4922 }
+                    },
+                    {
+                        type: 'activity',
+                        title: 'Visite VIP du Colisée',
+                        date: '2023-10-16T09:30',
+                        location: 'Colisée, Piazza del Colosseo',
+                        description: 'Accès aux zones restreintes et souterrains\nDurée: 3h',
+                        attachments: ['Tickets_Colisee.pdf'],
+                        position: { lat: 41.8902, lng: 12.4924 }
+                    }
+                ]
+            },
+            'bali': {
+                name: 'Bali - Décembre 2023',
+                destination: 'Bali',
+                center: { lat: -8.4095, lng: 115.1889 },
+                items: [
+                    {
+                        type: 'flight',
+                        title: 'Vol Paris-Denpasar',
+                        date: '2023-12-10T23:45',
+                        location: 'Terminal International, Denpasar',
+                        description: 'Vol SQ967 - Première Classe avec escale à Singapour',
+                        attachments: ['Boarding_Pass_Bali.pdf'],
+                        position: { lat: -8.7467, lng: 115.1667 }
+                    },
+                    {
+                        type: 'accommodation',
+                        title: 'Four Seasons Resort Bali',
+                        date: '2023-12-11T14:00',
+                        location: 'Jimbaran Bay, Bali',
+                        description: 'Villa sur la plage avec piscine privée\nCheck-in: 11 Déc - Check-out: 18 Déc',
+                        attachments: ['Confirmation_Four_Seasons.pdf'],
+                        position: { lat: -8.7805, lng: 115.1582 }
+                    },
+                    {
+                        type: 'activity',
+                        title: 'Massage spa balinais',
+                        date: '2023-12-12T10:00',
+                        location: 'Four Seasons Spa',
+                        description: 'Soin signature de 2h avec rituels traditionnels balinais',
+                        position: { lat: -8.7805, lng: 115.1582 }
+                    },
+                    {
+                        type: 'restaurant',
+                        title: 'Dîner romantique sur la plage',
+                        date: '2023-12-12T19:00',
+                        location: 'Jimbaran Beach',
+                        description: 'Dîner privé aux chandelles avec menu dégustation de fruits de mer',
+                        position: { lat: -8.7911, lng: 115.1602 }
+                    }
+                ]
+            }
+        };
+        
+        // Initialize Google Maps
         function initMap() {
+            const defaultLocation = { lat: 48.8566, lng: 2.3522 }; // Paris as default
+            
             map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: 41.9028, lng: 12.4964 }, // Rome coordinates
+                center: defaultLocation,
                 zoom: 12,
+                styles: [
+                    {
+                        "featureType": "water",
+                        "elementType": "geometry",
+                        "stylers": [
+                            { "color": "#e9e9e9" },
+                            { "lightness": 17 }
+                        ]
+                    },
+                    {
+                        "featureType": "landscape",
+                        "elementType": "geometry",
+                        "stylers": [
+                            { "color": "#f5f5f5" },
+                            { "lightness": 20 }
+                        ]
+                    },
+                    {
+                        "featureType": "road.highway",
+                        "elementType": "geometry.fill",
+                        "stylers": [
+                            { "color": "#ffffff" },
+                            { "lightness": 17 }
+                        ]
+                    },
+                    {
+                        "featureType": "road.highway",
+                        "elementType": "geometry.stroke",
+                        "stylers": [
+                            { "color": "#ffffff" },
+                            { "lightness": 29 },
+                            { "weight": 0.2 }
+                        ]
+                    },
+                    {
+                        "featureType": "road.arterial",
+                        "elementType": "geometry",
+                        "stylers": [
+                            { "color": "#ffffff" },
+                            { "lightness": 18 }
+                        ]
+                    },
+                    {
+                        "featureType": "road.local",
+                        "elementType": "geometry",
+                        "stylers": [
+                            { "color": "#ffffff" },
+                            { "lightness": 16 }
+                        ]
+                    },
+                    {
+                        "featureType": "poi",
+                        "elementType": "geometry",
+                        "stylers": [
+                            { "color": "#f5f5f5" },
+                            { "lightness": 21 }
+                        ]
+                    },
+                    {
+                        "featureType": "poi.park",
+                        "elementType": "geometry",
+                        "stylers": [
+                            { "color": "#dedede" },
+                            { "lightness": 21 }
+                        ]
+                    },
+                    {
+                        "elementType": "labels.text.stroke",
+                        "stylers": [
+                            { "visibility": "on" },
+                            { "color": "#ffffff" },
+                            { "lightness": 16 }
+                        ]
+                    },
+                    {
+                        "elementType": "labels.text.fill",
+                        "stylers": [
+                            { "saturation": 36 },
+                            { "color": "#333333" },
+                            { "lightness": 40 }
+                        ]
+                    },
+                    {
+                        "elementType": "labels.icon",
+                        "stylers": [
+                            { "visibility": "off" }
+                        ]
+                    },
+                    {
+                        "featureType": "transit",
+                        "elementType": "geometry",
+                        "stylers": [
+                            { "color": "#f2f2f2" },
+                            { "lightness": 19 }
+                        ]
+                    },
+                    {
+                        "featureType": "administrative",
+                        "elementType": "geometry.fill",
+                        "stylers": [
+                            { "color": "#fefefe" },
+                            { "lightness": 20 }
+                        ]
+                    },
+                    {
+                        "featureType": "administrative",
+                        "elementType": "geometry.stroke",
+                        "stylers": [
+                            { "color": "#fefefe" },
+                            { "lightness": 17 },
+                            { "weight": 1.2 }
+                        ]
+                    }
+                ]
             });
             
-            addMarker({ lat: 41.9028, lng: 12.4964 }, "Hôtel Roma Luxe");
-            addMarker({ lat: 41.8902, lng: 12.4922 }, "Ristorante Da Mario");
-            addMarker({ lat: 41.8902, lng: 12.4924 }, "Colisée");
-            
-            drawPath();
+            // Initialize with default trip selection if available
+            const tripSelect = document.getElementById('trip-select');
+            if (tripSelect.options.length > 1) {
+                tripSelect.selectedIndex = 1; // Select first trip
+                loadTrip(tripSelect.value);
+            }
         }
         
-        function addMarker(position, title) {
+        // Add marker to map
+        function addMarker(position, title, icon) {
+            // Clear existing markers if this is the first marker being added
+            if (markers.length === 0) {
+                map.setCenter(position);
+            }
+            
+            // Get icon based on type
+            let markerIcon;
+            switch(icon) {
+                case 'flight':
+                    markerIcon = {
+                        path: 'M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z',
+                        fillColor: '#0A3D62',
+                        fillOpacity: 1,
+                        scale: 1.2,
+                        strokeColor: '#FFFFFF',
+                        strokeWeight: 1,
+                        anchor: new google.maps.Point(12, 12)
+                    };
+                    break;
+                case 'accommodation':
+                    markerIcon = {
+                        path: 'M7 14V6M12 6h2.5M12 6v8M12 6H9.5M17 6v8M17 6h-2.5M7 6H4v14h16V6h-3M7 6h2.5M12 11h2.5M12 11v3M12 11H9.5M17 11h-2.5',
+                        fillColor: '#F0B35F',
+                        fillOpacity: 1,
+                        scale: 1.2,
+                        strokeColor: '#FFFFFF',
+                        strokeWeight: 1,
+                        anchor: new google.maps.Point(12, 12)
+                    };
+                    break;
+                case 'restaurant':
+                    markerIcon = {
+                        path: 'M8.1 13.34l2.83-2.83L3.91 3.5c-1.56 1.56-1.56 4.09 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.2-1.1-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41L13.41 13l1.47-1.47z',
+                        fillColor: '#3282B8',
+                        fillOpacity: 1,
+                        scale: 1.2,
+                        strokeColor: '#FFFFFF',
+                        strokeWeight: 1,
+                        anchor: new google.maps.Point(12, 12)
+                    };
+                    break;
+                case 'activity':
+                    markerIcon = {
+                        path: 'M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z',
+                        fillColor: '#C8302A',
+                        fillOpacity: 1,
+                        scale: 1.2,
+                        strokeColor: '#FFFFFF',
+                        strokeWeight: 1,
+                        anchor: new google.maps.Point(12, 12)
+                    };
+                    break;
+                default:
+                    markerIcon = {
+                        path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
+                        fillColor: '#0A3D62',
+                        fillOpacity: 1,
+                        scale: 1.2,
+                        strokeColor: '#FFFFFF',
+                        strokeWeight: 1,
+                        anchor: new google.maps.Point(12, 12)
+                    };
+            }
+            
             const marker = new google.maps.Marker({
                 position,
                 map,
-                title
+                title,
+                icon: markerIcon,
+                animation: google.maps.Animation.DROP
+            });
+            
+            // Add info window
+            const infoWindow = new google.maps.InfoWindow({
+                content: `<div style="color:#0A3D62; font-weight:bold;">${title}</div>`
+            });
+            
+            marker.addListener('click', () => {
+                infoWindow.open(map, marker);
             });
             
             markers.push(marker);
             return marker;
         }
         
+        // Draw path between markers
         function drawPath() {
+            if (markers.length < 2) return;
+            
+            // Sort markers by timeline order
+            // In a real app, you would sort them by date
+            
             const path = new google.maps.Polyline({
                 path: markers.map(marker => marker.getPosition()),
                 geodesic: true,
-                strokeColor: "#4285F4",
-                strokeOpacity: 1.0,
+                strokeColor: "#F0B35F",
+                strokeOpacity: 0.8,
                 strokeWeight: 3,
             });
             
             path.setMap(map);
         }
         
+        // Clear all markers from the map
+        function clearMarkers() {
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+        }
+        
+        // Load destination image
+        function loadDestinationImage(destination) {
+            const bannerImage = document.getElementById('banner-image');
+            const imageUrl = destinationImages[destination] || destinationImages['default'];
+            
+            // Set loading state
+            bannerImage.style.opacity = '0.3';
+            
+            // Load new image
+            bannerImage.src = imageUrl + '&t=' + new Date().getTime(); // Add timestamp to prevent caching
+            
+            // Update destination text
+            document.getElementById('current-destination').innerHTML = `
+                <i class="fas fa-map-marker-alt"></i> ${destination || 'Sélectionnez une destination'}
+            `;
+            
+            // Reset opacity when loaded
+            bannerImage.onload = function() {
+                bannerImage.style.opacity = '1';
+                // Add zoom effect
+                setTimeout(() => {
+                    bannerImage.style.transform = 'scale(1.1)';
+                }, 300);
+            };
+        }
+        
+        // Geocode a location and center the map
+        function geocodeAddress(address, callback) {
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'address': address }, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                    const location = results[0].geometry.location;
+                    if (callback) callback(location);
+                } else {
+                    console.error('Geocode failed: ' + status);
+                    // Use default fallback
+                    if (callback) callback({ lat: 0, lng: 0 });
+                }
+            });
+        }
+        
+        // Load trip data
+        function loadTrip(tripId) {
+            // Clear existing data
+            clearMarkers();
+            document.getElementById('timeline-content').innerHTML = '';
+            
+            if (!tripId || !tripsData[tripId]) {
+                loadDestinationImage(null);
+                return;
+            }
+            
+            currentTrip = tripsData[tripId];
+            
+            // Update banner with destination image
+            loadDestinationImage(currentTrip.destination);
+            
+            // Center map on trip location
+            map.setCenter(currentTrip.center);
+            map.setZoom(13);
+            
+            // Add timeline items and map markers
+            currentTrip.items.forEach(item => {
+                // Add to timeline
+                addTimelineItem(item);
+                
+                // Add to map
+                if (item.position) {
+                    addMarker(item.position, item.title, item.type);
+                }
+            });
+            
+            // Draw path on map
+            drawPath();
+        }
+        
+        // Add item to timeline
+        function addTimelineItem(item) {
+            const timelineContainer = document.getElementById('timeline-content');
+            const date = new Date(item.date);
+            
+            const newItem = document.createElement('div');
+            newItem.className = 'timeline-item';
+            
+            let icon;
+            switch(item.type) {
+                case 'flight':
+                    icon = 'plane-departure';
+                    break;
+                case 'accommodation':
+                    icon = 'hotel';
+                    break;
+                case 'activity':
+                    icon = 'hiking';
+                    break;
+                case 'restaurant':
+                    icon = 'utensils';
+                    break;
+                default:
+                    icon = 'map-pin';
+            }
+            
+            // Format date and time
+            const formattedDate = date.toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+            
+            const formattedTime = date.toLocaleTimeString('fr-FR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Create HTML content
+            let htmlContent = `
+                <h3>
+                    <span><i class="fas fa-${icon} timeline-icon"></i> ${item.title}</span>
+                    <span class="timeline-date">${formattedDate}, ${formattedTime}</span>
+                </h3>
+            `;
+            
+            if (item.location) {
+                htmlContent += `<p><i class="fas fa-map-marker-alt" style="color: var(--accent-color);"></i> ${item.location}</p>`;
+            }
+            
+            if (item.description) {
+                const description = item.description.replace(/\n/g, '<br>');
+                htmlContent += `<p>${description}</p>`;
+            }
+            
+            // Add attachments if any
+            if (item.attachments && item.attachments.length > 0) {
+                htmlContent += '<div class="attachments">';
+                
+                item.attachments.forEach(attachment => {
+                    let fileIcon;
+                    if (attachment.toLowerCase().endsWith('.pdf')) {
+                        fileIcon = 'file-pdf';
+                    } else if (attachment.toLowerCase().match(/\.(jpg|jpeg|png|gif)$/)) {
+                        fileIcon = 'file-image';
+                    } else {
+                        fileIcon = 'file';
+                    }
+                    
+                    htmlContent += `
+                        <div class="attachment">
+                            <i class="fas fa-${fileIcon}"></i> ${attachment}
+                        </div>
+                    `;
+                });
+                
+                htmlContent += '</div>';
+            }
+            
+            newItem.innerHTML = htmlContent;
+            
+            // Add to timeline in chronological order
+            let added = false;
+            const existingItems = timelineContainer.querySelectorAll('.timeline-item');
+            
+            if (existingItems.length > 0) {
+                for (let i = 0; i < existingItems.length; i++) {
+                    const itemDate = new Date(existingItems[i].dataset.date);
+                    if (date < itemDate) {
+                        timelineContainer.insertBefore(newItem, existingItems[i]);
+                        added = true;
+                        break;
+                    }
+                }
+            }
+            
+            if (!added) {
+                timelineContainer.appendChild(newItem);
+            }
+            
+            // Store date for sorting
+            newItem.dataset.date = item.date;
+            
+            return newItem;
+        }
+        
         // DOM elements
+        const tripSelect = document.getElementById('trip-select');
         const addItemBtn = document.getElementById('add-item-btn');
         const addModal = document.getElementById('add-modal');
         const addItemForm = document.getElementById('add-item-form');
@@ -506,6 +1294,10 @@
         const tabs = document.querySelectorAll('.tab');
         
         // Event listeners
+        tripSelect.addEventListener('change', () => {
+            loadTrip(tripSelect.value);
+        });
+        
         addItemBtn.addEventListener('click', () => {
             addModal.style.display = 'block';
         });
@@ -529,137 +1321,134 @@
             tripModal.style.display = 'none';
         });
         
-        addItemForm.addEventListener('submit', (e) => {
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // In a real app, we would switch content based on selected tab
+                // For demo purposes, we'll just show an alert for non-timeline tabs
+                if (tab.dataset.tab !== 'timeline') {
+                    alert(`Affichage de: ${tab.textContent.trim()}`);
+                }
+            });
+        });
+        
+        addItemForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Here we would normally save the data
-            alert('Élément ajouté avec succès !');
-            
-            // Create new timeline item
-            const timelineContainer = document.querySelector('.timeline');
-            const newItem = document.createElement('div');
-            newItem.className = 'timeline-item';
+            if (!currentTrip) {
+                alert('Veuillez d\'abord sélectionner un voyage');
+                return;
+            }
             
             const itemType = document.getElementById('item-type').value;
             const itemTitle = document.getElementById('item-title').value;
-            const itemDate = new Date(document.getElementById('item-date').value);
+            const itemDate = document.getElementById('item-date').value;
             const itemLocation = document.getElementById('item-location').value;
             const itemDescription = document.getElementById('item-description').value;
             
-            let icon;
-            switch(itemType) {
-                case 'flight':
-                    icon = 'plane-departure';
-                    break;
-                case 'accommodation':
-                    icon = 'hotel';
-                    break;
-                case 'activity':
-                    icon = 'monument';
-                    break;
-                case 'restaurant':
-                    icon = 'utensils';
-                    break;
-                default:
-                    icon = 'map-pin';
-            }
+            // Create new item
+            const newItem = {
+                type: itemType,
+                title: itemTitle,
+                date: itemDate,
+                location: itemLocation,
+                description: itemDescription,
+                attachments: []
+            };
             
-            newItem.innerHTML = `
-                <h3>
-                    <span><i class="fas fa-${icon} timeline-icon"></i> ${itemTitle}</span>
-                    <span class="timeline-date">${itemDate.toLocaleDateString('fr-FR')} ${itemDate.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}</span>
-                </h3>
-                <p>${itemLocation}</p>
-                <p>${itemDescription}</p>
-            `;
-            
+            // Handle file attachments
             const fileInput = document.getElementById('item-attachment');
             if (fileInput.files.length > 0) {
-                const attachmentsDiv = document.createElement('div');
-                attachmentsDiv.className = 'attachments';
-                
                 for (let i = 0; i < fileInput.files.length; i++) {
-                    const file = fileInput.files[i];
-                    const attachmentSpan = document.createElement('div');
-                    attachmentSpan.className = 'attachment';
-                    
-                    let fileIcon;
-                    if (file.type.includes('pdf')) {
-                        fileIcon = 'file-pdf';
-                    } else if (file.type.includes('image')) {
-                        fileIcon = 'file-image';
-                    } else {
-                        fileIcon = 'file';
-                    }
-                    
-                    attachmentSpan.innerHTML = `<i class="fas fa-${fileIcon}"></i> ${file.name}`;
-                    attachmentsDiv.appendChild(attachmentSpan);
-                }
-                
-                newItem.appendChild(attachmentsDiv);
-                
-                // For the demo, we're also adding a marker to the map
-                if (itemLocation) {
-                    // In a real app, we would geocode the address to get coordinates
-                    const randomLat = 41.89 + (Math.random() - 0.5) * 0.02;
-                    const randomLng = 12.49 + (Math.random() - 0.5) * 0.02;
-                    
-                    addMarker({ lat: randomLat, lng: randomLng }, itemTitle);
-                    drawPath();
+                    newItem.attachments.push(fileInput.files[i].name);
                 }
             }
             
-            timelineContainer.insertBefore(newItem, timelineContainer.firstChild);
+            // Geocode the location to get coordinates
+            if (itemLocation) {
+                geocodeAddress(itemLocation, function(position) {
+                    newItem.position = position;
+                    
+                    // Add marker to map
+                    addMarker(position, itemTitle, itemType);
+                    
+                    // Redraw path
+                    drawPath();
+                    
+                    // Add to current trip data
+                    currentTrip.items.push(newItem);
+                    
+                    // Add to timeline
+                    addTimelineItem(newItem);
+                });
+            } else {
+                // Add to current trip data without position
+                currentTrip.items.push(newItem);
+                
+                // Add to timeline
+                addTimelineItem(newItem);
+            }
+            
+            // Show success message
+            alert('Élément ajouté avec succès !');
             
             // Clear form and close modal
             addItemForm.reset();
             addModal.style.display = 'none';
         });
         
-        newTripForm.addEventListener('submit', (e) => {
+        newTripForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             const tripName = document.getElementById('trip-name').value;
+            const tripStart = document.getElementById('trip-start').value;
+            const tripEnd = document.getElementById('trip-end').value;
+            const tripDestination = document.getElementById('trip-destination').value;
             
-            // For demo purposes, just add to the dropdown
-            const tripSelect = document.getElementById('trip-select');
+            // Generate a unique ID for the trip
+            const tripId = tripDestination.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now();
+            
+            // Create new option in select
             const newOption = document.createElement('option');
-            newOption.value = tripName.toLowerCase().replace(/\s+/g, '-');
+            newOption.value = tripId;
             newOption.textContent = tripName;
+            newOption.dataset.destination = tripDestination;
             tripSelect.appendChild(newOption);
-            tripSelect.value = newOption.value;
             
-            alert('Voyage créé avec succès !');
-            newTripForm.reset();
-            tripModal.style.display = 'none';
-            
-            // Clear timeline and map for the new trip
-            document.querySelector('.timeline').innerHTML = '';
-            markers.forEach(marker => marker.setMap(null));
-            markers = [];
-        });
-        
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
+            // Geocode the destination
+            geocodeAddress(tripDestination, function(position) {
+                // Create new trip data
+                tripsData[tripId] = {
+                    name: tripName,
+                    destination: tripDestination,
+                    center: position,
+                    items: []
+                };
                 
-                // Here we would normally switch content based on selected tab
-                // For demo purposes, we just show an alert
-                if (tab.dataset.tab !== 'timeline') {
-                    alert(`Affichage de: ${tab.textContent}`);
-                }
+                // Select the new trip
+                tripSelect.value = tripId;
+                loadTrip(tripId);
+                
+                // Show success message
+                alert('Voyage créé avec succès !');
+                
+                // Clear form and close modal
+                newTripForm.reset();
+                tripModal.style.display = 'none';
             });
         });
         
-        // Simulating Google Maps API loading
-        window.onload = function() {
-            // In a real app, this would be loaded from the Google Maps API
-            initMap();
-        };
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pre-load a default banner image
+            loadDestinationImage('default');
+        });
     </script>
-<script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJq9jlXHmJvJnDtsILU1p6ShJXz62g36g&callback=initMap">
-</script>
+    
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJq9jlXHmJvJnDtsILU1p6ShJXz62g36g&libraries=places&callback=initMap">
+    </script>
 </body>
 </html>
