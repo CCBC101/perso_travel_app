@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Compagnon de Voyage</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4285F4;
+            --secondary-color: #34A853;
+            --accent-color: #FBBC05;
+            --dark-color: #1A73E8;
+            --light-color: #F8F9FA;
+            --danger-color: #EA4335;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+        }
+        
+        .section-title {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin: 30px 0 20px;
+            color: var(--dark-color);
+        }
+        
+        .trip-selector {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .trip-selector select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--dark-color);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+        
+        .map-container {
+            height: 400px;
+            background-color: #eee;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 40px 0;
+            padding-left: 50px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--primary-color);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -54px;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            border: 4px solid var(--primary-color);
+        }
+        
+        .timeline-item h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .timeline-date {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .timeline-icon {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 28px;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        .form-actions button {
+            margin-left: 10px;
+        }
+        
+        .attachments {
+            margin-top: 15px;
+        }
+        
+        .attachment {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .attachment i {
+            margin-right: 5px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline {
+                padding-left: 40px;
+            }
+            
+            .timeline-item {
+                padding: 15px;
+            }
+            
+            .timeline-item::before {
+                left: -44px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Mon Compagnon de Voyage</h1>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="trip-selector">
+            <select id="trip-select">
+                <option value="">Sélectionnez un voyage</option>
+                <option value="paris2023">Paris - Août 2023</option>
+                <option value="rome2023">Rome - Octobre 2023</option>
+            </select>
+            <button class="btn" id="new-trip-btn">Nouveau Voyage</button>
+        </div>
+        
+        <h2 class="section-title">Carte de l'itinéraire</h2>
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="timeline">Chronologie</div>
+            <div class="tab" data-tab="flights">Vols</div>
+            <div class="tab" data-tab="accommodations">Hébergements</div>
+            <div class="tab" data-tab="activities">Activités</div>
+            <div class="tab" data-tab="restaurants">Restaurants</div>
+        </div>
+        
+        <div id="timeline-container">
+            <h2 class="section-title">Chronologie du séjour 
+                <button class="btn" id="add-item-btn" style="float:right;font-size:14px;">
+                    <i class="fas fa-plus"></i> Ajouter
+                </button>
+            </h2>
+            
+            <div class="timeline">
+                <!-- Timeline items will be loaded here -->
+                <div class="timeline-item">
+                    <h3>
+                        <span><i class="fas fa-plane-departure timeline-icon"></i> Vol Paris-Rome</span>
+                        <span class="timeline-date">15 Oct 2023, 10:30</span>
+                    </h3>
+                    <p>Vol AF1204 - Terminal 2E</p>
+                    <p><strong>Durée:</strong> 2h15</p>
+                    <div class="attachments">
+                        <div class="attachment"><i class="fas fa-file-pdf"></i> Carte d'embarquement</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>
+                        <span><i class="fas fa-hotel timeline-icon"></i> Hôtel Roma Luxe</span>
+                        <span class="timeline-date">15 Oct 2023, 14:00</span>
+                    </h3>
+                    <p>Via del Corso, 114, Rome</p>
+                    <p><strong>Check-in:</strong> 15 Oct 14:00 - <strong>Check-out:</strong> 20 Oct 11:00</p>
+                    <p><strong>Réservation #:</strong> RL789456</p>
+                    <div class="attachments">
+                        <div class="attachment"><i class="fas fa-file-pdf"></i> Confirmation</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>
+                        <span><i class="fas fa-utensils timeline-icon"></i> Ristorante Da Mario</span>
+                        <span class="timeline-date">15 Oct 2023, 20:00</span>
+                    </h3>
+                    <p>Via dei Gracchi, 55, Rome</p>
+                    <p><strong>Réservation:</strong> 2 personnes</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>
+                        <span><i class="fas fa-monument timeline-icon"></i> Visite Colisée</span>
+                        <span class="timeline-date">16 Oct 2023, 09:30</span>
+                    </h3>
+                    <p>Visite guidée du Colisée et du Forum Romain</p>
+                    <p><strong>Durée:</strong> 3h</p>
+                    <div class="attachments">
+                        <div class="attachment"><i class="fas fa-ticket-alt"></i> Tickets</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for adding new items -->
+    <div id="add-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Ajouter un élément</h2>
+            
+            <form id="add-item-form">
+                <div class="form-group">
+                    <label for="item-type">Type d'élément</label>
+                    <select id="item-type" required>
+                        <option value="">Sélectionnez un type</option>
+                        <option value="flight">Vol</option>
+                        <option value="accommodation">Hébergement</option>
+                        <option value="activity">Activité</option>
+                        <option value="restaurant">Restaurant</option>
+                        <option value="other">Autre</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="item-title">Titre</label>
+                    <input type="text" id="item-title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="item-date">Date et heure</label>
+                    <input type="datetime-local" id="item-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="item-location">Lieu</label>
+                    <input type="text" id="item-location">
+                </div>
+                
+                <div class="form-group">
+                    <label for="item-description">Description</label>
+                    <textarea id="item-description"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="item-attachment">Pièces jointes</label>
+                    <input type="file" id="item-attachment" multiple>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-danger" id="cancel-btn">Annuler</button>
+                    <button type="submit" class="btn btn-secondary">Ajouter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for creating new trip -->
+    <div id="trip-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Créer un nouveau voyage</h2>
+            
+            <form id="new-trip-form">
+                <div class="form-group">
+                    <label for="trip-name">Nom du voyage</label>
+                    <input type="text" id="trip-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="trip-start">Date de début</label>
+                    <input type="date" id="trip-start" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="trip-end">Date de fin</label>
+                    <input type="date" id="trip-end" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="trip-destination">Destination principale</label>
+                    <input type="text" id="trip-destination" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-danger" id="cancel-trip-btn">Annuler</button>
+                    <button type="submit" class="btn btn-secondary">Créer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize the map
+        let map;
+        let markers = [];
+        
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 41.9028, lng: 12.4964 }, // Rome coordinates
+                zoom: 12,
+            });
+            
+            addMarker({ lat: 41.9028, lng: 12.4964 }, "Hôtel Roma Luxe");
+            addMarker({ lat: 41.8902, lng: 12.4922 }, "Ristorante Da Mario");
+            addMarker({ lat: 41.8902, lng: 12.4924 }, "Colisée");
+            
+            drawPath();
+        }
+        
+        function addMarker(position, title) {
+            const marker = new google.maps.Marker({
+                position,
+                map,
+                title
+            });
+            
+            markers.push(marker);
+            return marker;
+        }
+        
+        function drawPath() {
+            const path = new google.maps.Polyline({
+                path: markers.map(marker => marker.getPosition()),
+                geodesic: true,
+                strokeColor: "#4285F4",
+                strokeOpacity: 1.0,
+                strokeWeight: 3,
+            });
+            
+            path.setMap(map);
+        }
+        
+        // DOM elements
+        const addItemBtn = document.getElementById('add-item-btn');
+        const addModal = document.getElementById('add-modal');
+        const addItemForm = document.getElementById('add-item-form');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const closeSpans = document.querySelectorAll('.close');
+        const newTripBtn = document.getElementById('new-trip-btn');
+        const tripModal = document.getElementById('trip-modal');
+        const newTripForm = document.getElementById('new-trip-form');
+        const cancelTripBtn = document.getElementById('cancel-trip-btn');
+        const tabs = document.querySelectorAll('.tab');
+        
+        // Event listeners
+        addItemBtn.addEventListener('click', () => {
+            addModal.style.display = 'block';
+        });
+        
+        cancelBtn.addEventListener('click', () => {
+            addModal.style.display = 'none';
+        });
+        
+        closeSpans.forEach(span => {
+            span.addEventListener('click', () => {
+                addModal.style.display = 'none';
+                tripModal.style.display = 'none';
+            });
+        });
+        
+        newTripBtn.addEventListener('click', () => {
+            tripModal.style.display = 'block';
+        });
+        
+        cancelTripBtn.addEventListener('click', () => {
+            tripModal.style.display = 'none';
+        });
+        
+        addItemForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Here we would normally save the data
+            alert('Élément ajouté avec succès !');
+            
+            // Create new timeline item
+            const timelineContainer = document.querySelector('.timeline');
+            const newItem = document.createElement('div');
+            newItem.className = 'timeline-item';
+            
+            const itemType = document.getElementById('item-type').value;
+            const itemTitle = document.getElementById('item-title').value;
+            const itemDate = new Date(document.getElementById('item-date').value);
+            const itemLocation = document.getElementById('item-location').value;
+            const itemDescription = document.getElementById('item-description').value;
+            
+            let icon;
+            switch(itemType) {
+                case 'flight':
+                    icon = 'plane-departure';
+                    break;
+                case 'accommodation':
+                    icon = 'hotel';
+                    break;
+                case 'activity':
+                    icon = 'monument';
+                    break;
+                case 'restaurant':
+                    icon = 'utensils';
+                    break;
+                default:
+                    icon = 'map-pin';
+            }
+            
+            newItem.innerHTML = `
+                <h3>
+                    <span><i class="fas fa-${icon} timeline-icon"></i> ${itemTitle}</span>
+                    <span class="timeline-date">${itemDate.toLocaleDateString('fr-FR')} ${itemDate.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}</span>
+                </h3>
+                <p>${itemLocation}</p>
+                <p>${itemDescription}</p>
+            `;
+            
+            const fileInput = document.getElementById('item-attachment');
+            if (fileInput.files.length > 0) {
+                const attachmentsDiv = document.createElement('div');
+                attachmentsDiv.className = 'attachments';
+                
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    const file = fileInput.files[i];
+                    const attachmentSpan = document.createElement('div');
+                    attachmentSpan.className = 'attachment';
+                    
+                    let fileIcon;
+                    if (file.type.includes('pdf')) {
+                        fileIcon = 'file-pdf';
+                    } else if (file.type.includes('image')) {
+                        fileIcon = 'file-image';
+                    } else {
+                        fileIcon = 'file';
+                    }
+                    
+                    attachmentSpan.innerHTML = `<i class="fas fa-${fileIcon}"></i> ${file.name}`;
+                    attachmentsDiv.appendChild(attachmentSpan);
+                }
+                
+                newItem.appendChild(attachmentsDiv);
+                
+                // For the demo, we're also adding a marker to the map
+                if (itemLocation) {
+                    // In a real app, we would geocode the address to get coordinates
+                    const randomLat = 41.89 + (Math.random() - 0.5) * 0.02;
+                    const randomLng = 12.49 + (Math.random() - 0.5) * 0.02;
+                    
+                    addMarker({ lat: randomLat, lng: randomLng }, itemTitle);
+                    drawPath();
+                }
+            }
+            
+            timelineContainer.insertBefore(newItem, timelineContainer.firstChild);
+            
+            // Clear form and close modal
+            addItemForm.reset();
+            addModal.style.display = 'none';
+        });
+        
+        newTripForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const tripName = document.getElementById('trip-name').value;
+            
+            // For demo purposes, just add to the dropdown
+            const tripSelect = document.getElementById('trip-select');
+            const newOption = document.createElement('option');
+            newOption.value = tripName.toLowerCase().replace(/\s+/g, '-');
+            newOption.textContent = tripName;
+            tripSelect.appendChild(newOption);
+            tripSelect.value = newOption.value;
+            
+            alert('Voyage créé avec succès !');
+            newTripForm.reset();
+            tripModal.style.display = 'none';
+            
+            // Clear timeline and map for the new trip
+            document.querySelector('.timeline').innerHTML = '';
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+        });
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Here we would normally switch content based on selected tab
+                // For demo purposes, we just show an alert
+                if (tab.dataset.tab !== 'timeline') {
+                    alert(`Affichage de: ${tab.textContent}`);
+                }
+            });
+        });
+        
+        // Simulating Google Maps API loading
+        window.onload = function() {
+            // In a real app, this would be loaded from the Google Maps API
+            initMap();
+        };
+    </script>
+</body>
+</html>
