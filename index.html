@@ -1,11 +1,52 @@
+</div>
+    
+    <!-- Loader - élément pour afficher les chargements -->
+    <div id="loader">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p class="loader-message">Chargement...</p>
+        </div>
     </div>
     
-    <!-- Scripts externes -->
+    <!-- API Google - chargé en premier -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    
+    <!-- Scripts externes - chargés après l'API Google -->
     <script src="google-drive-service.js"></script>
     <script src="document-manager.js"></script>
     
     <!-- Script principal -->
     <script>
+        // Fonction pour vérifier si l'API Google est prête
+        function checkGoogleApiReady() {
+            return new Promise((resolve, reject) => {
+                // Vérifier si gapi est défini
+                if (typeof gapi === 'undefined') {
+                    // Attendre jusqu'à 5 secondes pour que gapi se charge
+                    let attempts = 0;
+                    const maxAttempts = 50; // 5 secondes (50 * 100ms)
+                    
+                    const checkInterval = setInterval(() => {
+                        attempts++;
+                        console.log(`Vérification de gapi... Tentative ${attempts}/${maxAttempts}`);
+                        
+                        if (typeof gapi !== 'undefined') {
+                            clearInterval(checkInterval);
+                            console.log('API Google chargée avec succès');
+                            resolve(true);
+                        } else if (attempts >= maxAttempts) {
+                            clearInterval(checkInterval);
+                            console.error('Délai d\'attente dépassé pour le chargement de l\'API Google');
+                            reject(new Error('Échec du chargement de l\'API Google'));
+                        }
+                    }, 100);
+                } else {
+                    console.log('API Google déjà chargée');
+                    resolve(true);
+                }
+            });
+        }
+        
         // Initialisation des cartes pour chaque destination
         function initMap() {
             // Coordonnées des destinations
@@ -879,152 +920,59 @@
             // Mettre à jour le compte à rebours quotidiennement
             setInterval(updateCountdown, 86400000); // Mettre à jour toutes les 24 heures
             
-            // Événement de clic sur les cartes - navigation vers la vue détaillée
-            document.querySelectorAll('.card').forEach(function(card) {
-                card.addEventListener('click', function() {
-                    const tripId = this.dataset.trip;
-                    if (tripId) {
-                        showView(`${tripId}-view`);
-                    }
-                });
-            });
+            // Configurer tous les listeners d'événements
+            setupEventListeners();
             
-            // Basculer le favori de la carte
-            document.querySelectorAll('.card-favorite').forEach(function(favorite) {
-                favorite.addEventListener('click', function(e) {
-                    e.stopPropagation(); // Empêcher le clic sur la carte
-                    this.classList.toggle('active');
-                    const icon = this.querySelector('i');
-                    if (this.classList.contains('active')) {
-                        icon.classList.remove('far');
-                        icon.classList.add('fas');
-                    } else {
-                        icon.classList.remove('fas');
-                        icon.classList.add('far');
-                    }
-                });
-            });
-            
-            // Changement d'onglet
-            document.querySelectorAll('.tab').forEach(function(tab) {
-                tab.addEventListener('click', function() {
-                    // Récupérer tous les onglets dans le même conteneur
-                    const tabs = this.closest('.tabs').querySelectorAll('.tab');
-                    tabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Filtrer le contenu en fonction de l'onglet sélectionné
-                    const filter = this.dataset.filter;
-                    // Logique de filtrage à implémenter si nécessaire
-                });
-            });
-            
-            // Navigation inférieure
-            document.querySelectorAll('.nav-item[data-view]').forEach(function(navItem) {
-                navItem.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const viewId = this.dataset.view;
-                    if (viewId) {
-                        // Charger les documents si on va à la vue documents
-                        if (viewId === 'documents-view') {
-                            loadAllDocuments();
-                        }
-                        
-                        showView(viewId);
-                    }
-                });
-            });
-            
-            // Ouvrir la modale pour un nouveau voyage
-            document.querySelectorAll('.nav-item[data-modal]').forEach(function(navItem) {
-                navItem.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const modalId = this.dataset.modal;
-                    const modal = document.getElementById(modalId);
-                    if (modal) {
-                        modal.style.display = 'block';
-                    }
-                });
-            });
-            
-            // Galerie de vignettes
-            document.querySelectorAll('.thumbnail').forEach(function(thumbnail) {
-                thumbnail.addEventListener('click', function() {
-                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Mettre à jour l'image principale
-                    const mainImg = this.closest('.detail-header').querySelector('.detail-img');
-                    if (mainImg) mainImg.src = this.src;
-                });
-            });
-            
-            // Fonctionnalité modale
-            const modals = document.querySelectorAll('.modal');
-            
-            // Ouvrir la modale
-            document.querySelectorAll('[data-modal]').forEach(function(button) {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const modalId = this.dataset.modal;
-                    document.getElementById(modalId).style.display = 'block';
-                });
-            });
-            
-            // Fermer la modale avec le bouton X
-            document.querySelectorAll('.modal-close').forEach(function(close) {
-                close.addEventListener('click', function() {
-                    this.closest('.modal').style.display = 'none';
-                });
-            });
-            
-            // Fermer la modale avec le bouton Annuler
-            document.querySelectorAll('#cancel-btn, #cancel-document-btn, #cancel-trip-btn').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    this.closest('.modal').style.display = 'none';
-                });
-            });
-            
-            // Fermer la modale en cliquant à l'extérieur
-            window.addEventListener('click', function(event) {
-                modals.forEach(function(modal) {
-                    if (event.target === modal) {
-                        modal.style.display = 'none';
-                    }
-                });
-            });
-            
-            // Lien "Voir tous les documents"
-            const viewAllDocsLink = document.getElementById('view-all-docs');
-            if (viewAllDocsLink) {
-                viewAllDocsLink.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    showView('documents-view');
-                    loadAllDocuments();
-                });
-            }
-            
-            // Initialiser les services Google
+            // Tentative d'initialisation des services Google
             try {
-                // Tenter d'initialiser Google Drive
-                await driveService.initialize();
+                // Afficher un indicateur de chargement
+                showLoader('Initialisation des services Google...');
                 
-                // Configurer les téléchargements de documents
-                setupDocumentUploads();
+                // Vérifier que l'API Google est chargée
+                await checkGoogleApiReady();
                 
-                // Récupérer les documents récents
-                loadRecentDocuments();
+                // Tenter d'initialiser Google Drive avec gestion des erreurs
+                try {
+                    await driveService.initialize();
+                    
+                    // Initialiser le gestionnaire de documents
+                    await documentManager.initialize();
+                    
+                    // Configurer les téléchargements de documents
+                    setupDocumentUploads();
+                    
+                    // Récupérer les documents récents
+                    loadRecentDocuments();
+                    
+                    // Masquer l'indicateur de chargement
+                    hideLoader();
+                } catch (driveError) {
+                    console.error('Erreur lors de l\'initialisation de Google Drive:', driveError);
+                    
+                    // Masquer l'indicateur de chargement
+                    hideLoader();
+                    
+                    // Afficher une notification d'erreur plus conviviale
+                    showNotification('Veuillez vous connecter à Google Drive pour utiliser toutes les fonctionnalités', 'info');
+                    
+                    // Afficher les boutons de connexion à la place des documents
+                    displayAuthButtons();
+                }
             } catch (error) {
                 console.error('Erreur lors de l\'initialisation des services Google:', error);
-                showNotification('Erreur de connexion aux services Google', 'error');
+                
+                // Masquer l'indicateur de chargement
+                hideLoader();
+                
+                // Afficher une notification d'erreur
+                showNotification('Problème de connexion aux services Google. Veuillez réessayer plus tard.', 'error');
             }
         });
     </script>
     
     <!-- Remplacez YOUR_API_KEY par votre clé API Google Maps -->
     <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZaOIKkyuhs9SaEBjqKNXoTvag1w4nQvo&callback=initMap">
+      src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
     </script>
 </body>
 </html><!DOCTYPE html>
