@@ -2,7 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0A3D62">
     <title>PCB Travels</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -305,6 +306,19 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
         
+        /* Touch device styles */
+        .mobile-device .timeline-item:hover {
+            transform: none; /* Disable hover effect on mobile */
+        }
+        
+        .timeline-item.touch-active {
+            background-color: rgba(240, 179, 95, 0.05);
+        }
+        
+        .touch-active {
+            opacity: 0.8;
+        }
+        
         .timeline-item::before {
             content: '';
             position: absolute;
@@ -502,9 +516,24 @@
         }
         
         /* Media Queries */
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .map-container {
+                height: 450px;
+            }
+            
+            .timeline-item {
+                padding: 20px;
+            }
+        }
+        
         @media (max-width: 768px) {
             .banner-container {
-                height: 250px;
+                height: 220px;
             }
             
             h1 {
@@ -513,11 +542,13 @@
             
             .banner-subtitle {
                 font-size: 16px;
+                margin-bottom: 10px;
             }
             
             .trip-selector {
                 flex-direction: column;
                 gap: 15px;
+                padding: 15px;
             }
             
             .trip-selector select {
@@ -529,12 +560,22 @@
                 width: 100%;
             }
             
+            .section-title h2 {
+                font-size: 24px;
+            }
+            
+            .map-container {
+                height: 350px;
+                margin-bottom: 30px;
+            }
+            
             .timeline {
                 padding-left: 40px;
             }
             
             .timeline-item {
                 padding: 20px;
+                margin-bottom: 30px;
             }
             
             .timeline-item::before {
@@ -545,6 +586,7 @@
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
+                font-size: 20px;
             }
             
             .timeline-item p {
@@ -563,12 +605,137 @@
             
             .tabs {
                 overflow-x: auto;
+                display: flex;
+                flex-wrap: nowrap;
                 padding: 5px;
+                border-radius: 30px;
             }
             
             .tab {
                 padding: 10px 15px;
                 white-space: nowrap;
+                flex: 0 0 auto;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .form-actions button {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .banner-container {
+                height: 180px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .banner-subtitle {
+                font-size: 14px;
+            }
+            
+            .banner-destination {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+            
+            .main-content {
+                padding-top: 20px;
+            }
+            
+            .section-title {
+                margin: 25px 0 20px;
+            }
+            
+            .section-title h2 {
+                font-size: 22px;
+            }
+            
+            .map-container {
+                height: 300px;
+                border-radius: 8px;
+            }
+            
+            .timeline-item {
+                padding: 15px;
+            }
+            
+            .timeline-date {
+                font-size: 12px;
+            }
+            
+            .timeline-icon {
+                font-size: 18px;
+                margin-right: 10px;
+            }
+            
+            .modal-content {
+                padding: 15px;
+                margin: 10% auto;
+            }
+            
+            .modal-content h2 {
+                font-size: 22px;
+                margin-bottom: 20px;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+            
+            .tab i {
+                margin-right: 5px;
+            }
+            
+            /* Make sure touch targets are at least 44px */
+            .btn, 
+            .tab,
+            select,
+            input[type="submit"],
+            input[type="button"],
+            .attachment {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .close {
+                width: 44px;
+                height: 44px;
+            }
+        }
+        
+        /* Fix iOS issues */
+        @supports (-webkit-touch-callout: none) {
+            /* iOS specific styles */
+            select,
+            textarea,
+            input {
+                font-size: 16px; /* Prevents iOS zoom on focus */
+            }
+            
+            .btn, 
+            .tab,
+            .attachment {
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            /* Fix 100vh issue on iOS */
+            .modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                height: -webkit-fill-available;
             }
         }
     </style>
@@ -1374,7 +1541,7 @@
                     // Add marker to map
                     addMarker(position, itemTitle, itemType);
                     
-                    // Redraw path
+                            // Redraw path
                     drawPath();
                     
                     // Add to current trip data
@@ -1382,6 +1549,16 @@
                     
                     // Add to timeline
                     addTimelineItem(newItem);
+                    
+                    // Adjust map bounds to fit all markers on mobile
+                    if (window.innerWidth < 768) {
+                        const bounds = new google.maps.LatLngBounds();
+                        markers.forEach(marker => bounds.extend(marker.getPosition()));
+                        map.fitBounds(bounds);
+                        // Zoom out a bit on mobile for better visibility
+                        const zoom = map.getZoom();
+                        map.setZoom(zoom > 12 ? zoom - 1 : zoom);
+                    }
                 });
             } else {
                 // Add to current trip data without position
@@ -1440,10 +1617,66 @@
             });
         });
         
+        // Handle touch events for better mobile experience
+        function addTouchSupport() {
+            // Add active state for buttons on touch
+            const touchElements = document.querySelectorAll('.btn, .tab, .timeline-item, .attachment');
+            
+            touchElements.forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.classList.add('touch-active');
+                }, {passive: true});
+                
+                element.addEventListener('touchend', function() {
+                    this.classList.remove('touch-active');
+                }, {passive: true});
+            });
+            
+            // Improve scrolling in modals on mobile
+            const modals = document.querySelectorAll('.modal-content');
+            modals.forEach(modal => {
+                modal.addEventListener('touchmove', function(e) {
+                    e.stopPropagation();
+                }, {passive: true});
+            });
+        }
+        
+        // Detect orientation change to adjust map
+        function handleOrientationChange() {
+            window.addEventListener('orientationchange', function() {
+                // Small delay to allow orientation to complete
+                setTimeout(function() {
+                    if (map && markers.length > 0) {
+                        google.maps.event.trigger(map, 'resize');
+                        
+                        // If there are markers, fit bounds
+                        if (markers.length > 1) {
+                            const bounds = new google.maps.LatLngBounds();
+                            markers.forEach(marker => bounds.extend(marker.getPosition()));
+                            map.fitBounds(bounds);
+                        } else if (markers.length === 1) {
+                            map.setCenter(markers[0].getPosition());
+                        }
+                    }
+                }, 300);
+            });
+        }
+        
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
             // Pre-load a default banner image
             loadDestinationImage('default');
+            
+            // Add touch support for mobile
+            addTouchSupport();
+            
+            // Handle orientation changes
+            handleOrientationChange();
+            
+            // Add CSS class to body to help with mobile-specific styling
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                document.body.classList.add('mobile-device');
+            }
         });
     </script>
     
