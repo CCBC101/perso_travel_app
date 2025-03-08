@@ -2,7 +2,7 @@
 
 // Paramètres pour l'API Google Drive
 const DRIVE_API_CONFIG = {
-  apiKey: 'AIzaSyAJq9jlXHmJvJnDtsILU1p6ShJXz62g36g',
+  apiKey: 'AIzaSyAZaOIKkyuhs9SaEBjqKNXoTvag1w4nQvo',
   clientId: '182976407425-5cbitjlrgvbm5l7iteop4tv1danppi7r.apps.googleusercontent.com',
   discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
   scope: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.appdata'
