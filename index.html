@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0A3D62">
+    <meta name="theme-color" content="#1A2B3C">
     <title>BCP Travels</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #0A3D62;    /* Bleu marine profond */
-            --secondary-color: #3282B8;  /* Bleu ciel */
-            --accent-color: #F0B35F;     /* Or doux */
-            --dark-color: #1B1464;       /* Bleu nuit */
-            --light-color: #F0F6FA;      /* Blanc azuré */
-            --danger-color: #C8302A;     /* Rouge sombre élégant */
-            --gold: #D4AF37;             /* Or premium */
-            --silver: #C0C0C0;           /* Argent élégant */
-            --text-dark: #1A1A2E;        /* Texte foncé */
-            --text-light: #E8F1F5;       /* Texte clair */
+            --primary-color: #1A2B3C;     /* Bleu sombre */
+            --secondary-color: #2D4356;   /* Bleu gris */
+            --accent-color: #FF8C42;      /* Orange vif */
+            --dark-color: #121820;        /* Presque noir */
+            --light-color: #F8F9FA;       /* Blanc cassé */
+            --gray-color: #E9ECEF;        /* Gris très clair */
+            --text-dark: #212529;         /* Texte principal */
+            --text-light: #F8F9FA;        /* Texte clair */
+            --text-muted: #6C757D;        /* Texte secondaire */
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 20px;
+            --box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
         }
         
         * {
@@ -31,267 +34,479 @@
             background-color: var(--light-color);
             color: var(--text-dark);
             line-height: 1.6;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
         }
         
         h1, h2, h3, h4, h5, h6 {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Poppins', sans-serif;
             font-weight: 600;
+            color: var(--primary-color);
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px;
         }
         
-        /* Header and Banner */
-        header {
-            background-color: var(--primary-color);
-            padding: 0;
-            margin-bottom: 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        
-        .banner-container {
-            position: relative;
-            height: 300px;
+        /* Main Layout */
+        .app-layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
             overflow: hidden;
+        }
+        
+        .content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 80px; /* Space for bottom nav */
+        }
+        
+        /* Header and Navigation */
+        .header {
+            padding: 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 5;
         }
         
-        .banner-controls {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 10;
+        .header-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .countdown-badge {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 10px;
-        }
-        
-        .banner-select {
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: var(--accent-color);
             color: white;
-            padding: 8px 30px 8px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 12px;
-            min-width: 180px;
-            transition: all 0.3s;
-        }
-        
-        .banner-select:focus {
-            outline: none;
-            background-color: rgba(255, 255, 255, 0.3);
-            border-color: var(--accent-color);
-        }
-        
-        .banner-select option {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .banner-btn {
-            background-color: rgba(240, 179, 95, 0.8);
-            color: var(--primary-color);
-            border: none;
+            border-radius: var(--border-radius-md);
             padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .countdown-days {
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .countdown-dest {
+            font-size: 12px;
+            margin-top: -3px;
+        }
+        
+        /* Categories Tabs */
+        .categories {
+            padding: 0 15px;
+            margin: 20px 0;
+        }
+        
+        .categories-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding: 0 5px;
+        }
+        
+        .tabs {
             display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 5px;
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        .tabs::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            white-space: nowrap;
+            border-radius: var(--border-radius-lg);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: var(--gray-color);
+            color: var(--text-muted);
+        }
+        
+        .tab.active {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+        
+        /* Cards Grid */
+        .cards-section {
+            padding: 0 15px;
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 5px;
-            transition: all 0.3s;
+            margin-bottom: 15px;
+            padding: 0 5px;
         }
         
-        .banner-btn:hover {
-            background-color: rgba(240, 179, 95, 1);
-            transform: translateY(-2px);
+        .section-title {
+            font-size: 20px;
         }
         
-        .banner-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(10, 61, 98, 0.6), rgba(27, 20, 100, 0.7));
-            z-index: 1;
+        .section-action {
+            color: var(--accent-color);
+            font-weight: 500;
+            text-decoration: none;
         }
         
-        .banner-image {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-img-container {
+            height: 120px;
+            position: relative;
+        }
+        
+        .card-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 25s ease-out;
         }
         
-        .banner-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            padding: 20px;
-            color: white;
+        .card-favorite {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
         }
         
-        h1 {
-            font-size: 48px;
-            margin-bottom: 10px;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            letter-spacing: 1px;
-        }
-        
-        .banner-subtitle {
-            font-size: 20px;
-            font-weight: 300;
+        .card-favorite:hover, .card-favorite.active {
+            background-color: white;
             color: var(--accent-color);
+        }
+        
+        .card-content {
+            padding: 15px;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .card-location {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+        
+        .card-date {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        /* Detail View Header */
+        .detail-header {
+            position: relative;
+            height: 280px;
+        }
+        
+        .detail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .detail-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            color: white;
+        }
+        
+        .back-button, .action-button {
+            position: absolute;
+            top: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            color: var(--text-dark);
+        }
+        
+        .back-button {
+            left: 20px;
+        }
+        
+        .action-button {
+            right: 20px;
+        }
+        
+        .action-button + .action-button {
+            right: 70px;
+        }
+        
+        .thumbnail-gallery {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .thumbnail-gallery::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .thumbnail {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .thumbnail:hover, .thumbnail.active {
+            border-color: var(--accent-color);
+        }
+        
+        /* Detail Content */
+        .detail-content {
+            padding: 20px;
+        }
+        
+        .detail-title {
+            font-size: 24px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .detail-price {
+            font-size: 22px;
+            color: var(--accent-color);
+        }
+        
+        .detail-subtitle {
+            color: var(--text-muted);
+            font-size: 16px;
             margin-bottom: 20px;
         }
         
-        .banner-destination {
-            display: inline-block;
-            padding: 8px 16px;
-            background-color: rgba(240, 179, 95, 0.8);
-            color: var(--primary-color);
-            border-radius: 30px;
-            font-weight: 600;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            margin-top: 15px;
-        }
-        
-        /* Main Content */
-        .main-content {
+        .detail-info {
             background-color: white;
-            margin-top: 0;
-            padding-top: 30px;
-            padding-bottom: 50px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
-            border-radius: 0 0 8px 8px;
-        }
-        
-        /* Trip Selector */
-        .trip-selector {
-            display: none; /* Hide the original selector */
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            background-color: white;
+            border-radius: var(--border-radius-md);
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            box-shadow: var(--box-shadow);
         }
         
-        .trip-selector select {
-            padding: 12px 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 16px;
-            flex-grow: 1;
-            margin-right: 15px;
-            font-family: 'Montserrat', sans-serif;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230A3D62' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 15px;
-            transition: all 0.3s;
-        }
-        
-        .trip-selector select:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(240, 179, 95, 0.2);
-        }
-        
-        .btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .btn i {
-            margin-right: 8px;
-        }
-        
-        .btn:hover {
-            background-color: var(--dark-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-        
-        .btn-secondary {
-            background-color: var(--secondary-color);
-        }
-        
-        .btn-accent {
-            background-color: var(--accent-color);
-            color: var(--primary-color);
-        }
-        
-        .btn-danger {
-            background-color: var(--danger-color);
-        }
-        
-        /* Section title */
-        .section-title {
-            margin: 40px 0 25px;
-            position: relative;
+        .info-item {
             display: flex;
             align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-color);
+        }
+        
+        .info-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--gray-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: var(--primary-color);
         }
         
-        .section-title h2 {
-            font-size: 28px;
-            font-weight: 600;
-            padding-bottom: 5px;
-            margin-right: 15px;
-        }
-        
-        .section-title:after {
-            content: '';
+        .info-content {
             flex: 1;
-            height: 1px;
-            background: linear-gradient(to right, var(--accent-color), transparent);
         }
         
-        /* Map Container */
-        .map-container {
-            height: 500px;
-            background-color: #f7f7f7;
-            margin-bottom: 40px;
+        .info-label {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        .info-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        /* Timeline */
+        .timeline {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 15px;
+            position: relative;
+        }
+        
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 17px;
+            top: 35px;
+            bottom: -20px;
+            width: 2px;
+            background-color: var(--gray-color);
+        }
+        
+        .timeline-marker {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            border: 2px solid var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            flex-shrink: 0;
+            z-index: 1;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: 15px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .timeline-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .timeline-date {
+            font-size: 12px;
+            color: var(--text-muted);
+            background-color: var(--gray-color);
+            padding: 3px 8px;
             border-radius: 12px;
+        }
+        
+        .timeline-location {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        
+        .timeline-description {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-attachments {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .attachment {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: var(--primary-color);
+            background-color: var(--gray-color);
+            padding: 5px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .attachment:hover {
+            background-color: rgba(240, 140, 66, 0.15);
+            color: var(--accent-color);
+        }
+        
+        /* Map View */
+        .map-container {
+            height: 300px;
+            background-color: var(--gray-color);
+            margin-bottom: 20px;
+            border-radius: var(--border-radius-md);
             overflow: hidden;
             position: relative;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            box-shadow: var(--box-shadow);
         }
         
         #map {
@@ -299,165 +514,68 @@
             width: 100%;
         }
         
-        /* Tabs */
-        .tabs {
+        /* Action Buttons */
+        .action-buttons {
             display: flex;
-            margin-bottom: 30px;
-            background-color: white;
-            border-radius: 50px;
-            padding: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            justify-content: space-between;
+            margin-top: 20px;
         }
         
-        .tab {
-            padding: 12px 25px;
-            cursor: pointer;
-            border-radius: 50px;
+        .btn {
+            padding: 15px;
+            border-radius: var(--border-radius-md);
+            border: none;
+            font-size: 16px;
             font-weight: 500;
-            transition: all 0.3s;
-            text-align: center;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
             flex: 1;
         }
         
-        .tab.active {
-            background-color: var(--primary-color);
-            color: white;
-            box-shadow: 0 3px 8px rgba(10, 61, 98, 0.3);
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1.5px solid var(--primary-color);
         }
         
-        .tab:hover:not(.active) {
-            background-color: rgba(10, 61, 98, 0.1);
-        }
-        
-        .tab i {
-            margin-right: 10px;
-        }
-        
-        /* Timeline */
-        .timeline {
-            position: relative;
-            margin: 40px 0;
-            padding-left: 60px;
-        }
-        
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 30px;
-            top: 0;
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
             bottom: 0;
-            width: 2px;
-            background: linear-gradient(to bottom, var(--accent-color), var(--primary-color));
-        }
-        
-        .timeline-item {
-            position: relative;
-            margin-bottom: 40px;
+            left: 0;
+            right: 0;
             background-color: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: all 0.3s;
-            border-left: 4px solid var(--accent-color);
-        }
-        
-        .timeline-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-        
-        /* Touch device styles */
-        .mobile-device .timeline-item:hover {
-            transform: none; /* Disable hover effect on mobile */
-        }
-        
-        .timeline-item.touch-active {
-            background-color: rgba(240, 179, 95, 0.05);
-        }
-        
-        .touch-active {
-            opacity: 0.8;
-        }
-        
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -64px;
-            top: 25px;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background-color: var(--accent-color);
-            border: 4px solid var(--primary-color);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-        
-        .timeline-item h3 {
-            color: var(--primary-color);
-            margin-bottom: 15px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
+            padding: 15px 0;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            font-size: 22px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 12px;
+            gap: 5px;
         }
         
-        .timeline-date {
-            color: var(--secondary-color);
-            font-size: 14px;
-            font-weight: 500;
-            background-color: rgba(50, 130, 184, 0.1);
-            padding: 5px 10px;
-            border-radius: 20px;
-        }
-        
-        .timeline-icon {
-            margin-right: 15px;
+        .nav-item.active {
             color: var(--accent-color);
+        }
+        
+        .nav-icon {
             font-size: 20px;
-            width: 30px;
-            text-align: center;
-        }
-        
-        .timeline-item p {
-            margin-bottom: 10px;
-            padding-left: 45px;
-            color: #555;
-        }
-        
-        .timeline-item strong {
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-        
-        /* Attachments */
-        .attachments {
-            margin-top: 20px;
-            padding-left: 45px;
-        }
-        
-        .attachment {
-            display: inline-block;
-            padding: 8px 15px;
-            background-color: rgba(10, 61, 98, 0.05);
-            border-radius: 20px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: var(--primary-color);
-            transition: all 0.3s;
-            border: 1px solid transparent;
-        }
-        
-        .attachment:hover {
-            background-color: rgba(10, 61, 98, 0.1);
-            border-color: var(--accent-color);
-            cursor: pointer;
-        }
-        
-        .attachment i {
-            margin-right: 8px;
-            color: var(--accent-color);
         }
         
         /* Modal */
@@ -468,7 +586,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.7);
+            background-color: rgba(0,0,0,0.5);
             z-index: 1000;
             backdrop-filter: blur(5px);
             overflow-y: auto;
@@ -476,16 +594,14 @@
         
         .modal-content {
             background-color: white;
-            margin: 3% auto;
-            padding: 30px;
+            margin: 30px auto;
             width: 90%;
-            max-width: 700px;
-            border-radius: 12px;
+            max-width: 500px;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
             position: relative;
-            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             animation: modalFadeIn 0.3s;
-            max-height: 90vh;
-            overflow-y: auto;
         }
         
         @keyframes modalFadeIn {
@@ -493,549 +609,666 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .modal-content h2 {
-            color: var(--primary-color);
-            margin-bottom: 25px;
-            text-align: center;
-            font-size: 28px;
-        }
-        
-        .close {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            font-size: 28px;
-            cursor: pointer;
-            color: var(--primary-color);
-            transition: all 0.3s;
-            width: 30px;
-            height: 30px;
+        .modal-header {
+            padding: 20px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            border-radius: 50%;
+            border-bottom: 1px solid var(--gray-color);
         }
         
-        .close:hover {
-            color: var(--danger-color);
-            background-color: rgba(200, 48, 42, 0.1);
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
         }
         
-        /* Form */
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+        
+        .modal-body {
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--gray-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* Form Elements */
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
-        .form-group label {
+        .form-label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: var(--primary-color);
+            font-size: 14px;
         }
         
-        .form-group input, 
-        .form-group select, 
-        .form-group textarea {
+        .form-control {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            border: 1.5px solid var(--gray-color);
+            border-radius: var(--border-radius-md);
             font-size: 16px;
-            font-family: 'Montserrat', sans-serif;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
         
-        .form-group input:focus, 
-        .form-group select:focus, 
-        .form-group textarea:focus {
+        .form-control:focus {
             outline: none;
             border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(240, 179, 95, 0.2);
+            box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.1);
         }
         
-        .form-group select {
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230A3D62' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 15px;
-        }
-        
-        .form-group textarea {
-            height: 120px;
-            resize: vertical;
-        }
-        
-        .form-group input[type="file"] {
-            padding: 10px;
-            background-color: rgba(10, 61, 98, 0.05);
-        }
-        
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 30px;
-            gap: 15px;
-        }
-        
-        /* Media Queries */
         /* Responsive Design */
-        @media (max-width: 992px) {
-            .container {
-                padding: 15px;
+        @media (min-width: 768px) {
+            .app-layout {
+                max-width: 800px;
+                margin: 0 auto;
+                border-left: 1px solid var(--gray-color);
+                border-right: 1px solid var(--gray-color);
             }
             
-            .map-container {
-                height: 450px;
-            }
-            
-            .timeline-item {
-                padding: 20px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .banner-container {
-                height: 220px;
-            }
-            
-            .banner-controls {
-                position: relative;
-                top: auto;
-                right: auto;
-                width: 100%;
-                justify-content: center;
-                padding: 15px;
-                margin-top: -50px;
-                z-index: 50;
-            }
-            
-            .banner-select {
-                min-width: 150px;
-                font-size: 13px;
-                padding: 6px 25px 6px 10px;
-            }
-            
-            .banner-btn {
-                font-size: 13px;
-                padding: 6px 10px;
-            }
-            
-            h1 {
-                font-size: 32px;
-            }
-            
-            .banner-subtitle {
-                font-size: 16px;
-                margin-bottom: 10px;
-            }
-            
-            .trip-selector {
-                flex-direction: column;
-                gap: 15px;
-                padding: 15px;
-            }
-            
-            .trip-selector select {
-                width: 100%;
-                margin-right: 0;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-            
-            .section-title h2 {
-                font-size: 24px;
-            }
-            
-            .map-container {
-                height: 350px;
-                margin-bottom: 30px;
-            }
-            
-            .timeline {
-                padding-left: 40px;
-            }
-            
-            .timeline-item {
-                padding: 20px;
-                margin-bottom: 30px;
-            }
-            
-            .timeline-item::before {
-                left: -44px;
-            }
-            
-            .timeline-item h3 {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-                font-size: 20px;
-            }
-            
-            .timeline-item p {
-                padding-left: 0;
-            }
-            
-            .attachments {
-                padding-left: 0;
-            }
-            
-            .modal-content {
-                width: 95%;
-                margin: 3% auto 5% auto;
-                padding: 20px;
-                max-height: 85vh;
-            }
-            
-            .tabs {
-                overflow-x: auto;
-                display: flex;
-                flex-wrap: nowrap;
-                padding: 5px;
-                border-radius: 30px;
-            }
-            
-            .tab {
-                padding: 10px 15px;
-                white-space: nowrap;
-                flex: 0 0 auto;
-            }
-            
-            .form-actions {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .form-actions button {
-                width: 100%;
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
         }
         
         @media (max-width: 576px) {
-            .banner-container {
-                height: 200px;
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
             
-            .banner-controls {
-                flex-direction: column;
-                gap: 8px;
-                margin-top: 0;
-                top: 10px;
+            .detail-header {
+                height: 220px;
             }
             
-            .banner-select {
-                min-width: 120px;
-                font-size: 12px;
-            }
-            
-            .banner-btn {
-                font-size: 12px;
-                padding: 5px 8px;
-            }
-            
-            h1 {
-                font-size: 28px;
-            }
-            
-            .banner-subtitle {
-                font-size: 14px;
-            }
-            
-            .banner-destination {
-                font-size: 14px;
-                padding: 6px 12px;
-            }
-            
-            .main-content {
-                padding-top: 20px;
-            }
-            
-            .section-title {
-                margin: 25px 0 20px;
-            }
-            
-            .section-title h2 {
-                font-size: 22px;
-            }
-            
-            .map-container {
-                height: 300px;
-                border-radius: 8px;
-            }
-            
-            .timeline-item {
-                padding: 15px;
-            }
-            
-            .timeline-date {
-                font-size: 12px;
-            }
-            
-            .timeline-icon {
-                font-size: 18px;
-                margin-right: 10px;
-            }
-            
-            .modal-content {
-                padding: 15px;
-                margin: 5% auto 10% auto;
-                max-height: 80vh;
-            }
-            
-            .modal-content h2 {
-                font-size: 22px;
-                margin-bottom: 20px;
-            }
-            
-            .form-group {
-                margin-bottom: 20px;
-            }
-            
-            .tab i {
-                margin-right: 5px;
-            }
-            
-            /* Make sure touch targets are at least 44px */
-            .btn, 
-            .tab,
-            select,
-            input[type="submit"],
-            input[type="button"],
-            .attachment {
-                min-height: 44px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .close {
-                width: 44px;
-                height: 44px;
-            }
-        }
-        
-        /* Fix iOS issues */
-        @supports (-webkit-touch-callout: none) {
-            /* iOS specific styles */
-            select,
-            textarea,
-            input {
-                font-size: 16px; /* Prevents iOS zoom on focus */
-            }
-            
-            .btn, 
-            .tab,
-            .attachment {
-                cursor: pointer;
-                -webkit-tap-highlight-color: transparent;
-            }
-            
-            /* Fix 100vh issue on iOS */
-            .modal {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                height: -webkit-fill-available;
-                overflow-y: scroll;
-                -webkit-overflow-scrolling: touch;
+            .thumbnail {
+                width: 50px;
+                height: 50px;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="banner-container">
-            <img id="banner-image" class="banner-image" src="" alt="Destination">
-            <div class="banner-overlay"></div>
-            <div class="banner-controls">
-                <select id="banner-trip-select" class="banner-select">
-                    <option value="">Sélectionnez un voyage</option>
-                    <option value="paris" data-destination="Paris">Paris - Août 2023</option>
-                    <option value="rome" data-destination="Rome">Rome - Octobre 2023</option>
-                    <option value="bali" data-destination="Bali">Bali - Décembre 2023</option>
-                </select>
-                <button class="banner-btn" id="banner-new-trip-btn">
-                    <i class="fas fa-plus"></i> Nouveau
-                </button>
-            </div>
-            <div class="banner-content">
-                <h1>BCP Travels</h1>
-                <p class="banner-subtitle">Planifiez vos voyages d'exception</p>
-                <div id="current-destination" class="banner-destination">
-                    <i class="fas fa-map-marker-alt"></i> Sélectionnez une destination
+    <div class="app-layout">
+        <div class="content-wrapper">
+            <!-- Home View -->
+            <div class="view home-view">
+                <header class="header">
+                    <h1 class="header-title">BCP Travels</h1>
+                    <div class="countdown-badge">
+                        <div class="countdown-days">J-18</div>
+                        <div class="countdown-dest">Tokyo</div>
+                    </div>
+                </header>
+                
+                <div class="categories">
+                    <h2 class="categories-title">Mes voyages</h2>
+                    <div class="tabs">
+                        <div class="tab active">Tous</div>
+                        <div class="tab">À venir</div>
+                        <div class="tab">Passés</div>
+                        <div class="tab">Favoris</div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </header>
-    
-    <div class="container main-content">
-        <div class="trip-selector">
-            <select id="trip-select">
-                <option value="">Sélectionnez un voyage</option>
-                <option value="paris" data-destination="Paris">Paris - Août 2023</option>
-                <option value="rome" data-destination="Rome">Rome - Octobre 2023</option>
-                <option value="bali" data-destination="Bali">Bali - Décembre 2023</option>
-                <option value="tokyo" data-destination="Tokyo">Tokyo - Janvier 2024</option>
-                <option value="newyork" data-destination="New York">New York - Mars 2024</option>
-            </select>
-            <button class="btn" id="new-trip-btn"><i class="fas fa-plus"></i> Nouveau Voyage</button>
-        </div>
-        
-        <div class="section-title">
-            <h2>Carte de l'itinéraire</h2>
-        </div>
-        <div class="map-container">
-            <div id="map"></div>
-        </div>
-        
-        <div class="tabs">
-            <div class="tab active" data-tab="timeline"><i class="fas fa-stream"></i> Chronologie</div>
-            <div class="tab" data-tab="flights"><i class="fas fa-plane"></i> Vols</div>
-            <div class="tab" data-tab="accommodations"><i class="fas fa-hotel"></i> Hébergements</div>
-            <div class="tab" data-tab="activities"><i class="fas fa-hiking"></i> Activités</div>
-            <div class="tab" data-tab="restaurants"><i class="fas fa-utensils"></i> Restaurants</div>
-        </div>
-        
-        <div id="timeline-container">
-            <div class="section-title">
-                <h2>Chronologie du séjour</h2>
-                <button class="btn btn-accent" id="add-item-btn" style="margin-left: 20px; font-size:14px;">
-                    <i class="fas fa-plus"></i> Ajouter
-                </button>
+                
+                <div class="cards-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Voyages planifiés</h2>
+                        <a href="#" class="section-action">Voir tout</a>
+                    </div>
+                    
+                    <div class="cards-grid">
+                        <div class="card" onclick="location.href='#voyage-paris'">
+                            <div class="card-img-container">
+                                <img src="https://source.unsplash.com/featured/?paris,eiffel" alt="Paris" class="card-img">
+                                <div class="card-favorite">
+                                    <i class="far fa-heart"></i>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">Paris</h3>
+                                <div class="card-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>France</span>
+                                </div>
+                                <div class="card-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>10 - 15 Août 2023</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card" onclick="location.href='#voyage-rome'">
+                            <div class="card-img-container">
+                                <img src="https://source.unsplash.com/featured/?rome,colosseum" alt="Rome" class="card-img">
+                                <div class="card-favorite active">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">Rome</h3>
+                                <div class="card-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Italie</span>
+                                </div>
+                                <div class="card-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>15 - 20 Oct 2023</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card" onclick="location.href='#voyage-bali'">
+                            <div class="card-img-container">
+                                <img src="https://source.unsplash.com/featured/?bali,beach" alt="Bali" class="card-img">
+                                <div class="card-favorite">
+                                    <i class="far fa-heart"></i>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">Bali</h3>
+                                <div class="card-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Indonésie</span>
+                                </div>
+                                <div class="card-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>11 - 18 Déc 2023</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card" onclick="location.href='#voyage-tokyo'">
+                            <div class="card-img-container">
+                                <img src="https://source.unsplash.com/featured/?tokyo,japan" alt="Tokyo" class="card-img">
+                                <div class="card-favorite">
+                                    <i class="far fa-heart"></i>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">Tokyo</h3>
+                                <div class="card-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Japon</span>
+                                </div>
+                                <div class="card-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>15 - 22 Jan 2024</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cards-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Documents récents</h2>
+                        <a href="#" class="section-action">Voir tout</a>
+                    </div>
+                    
+                    <div style="padding: 5px 0 15px;">
+                        <div class="document-item">
+                            <div class="document-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="document-info">
+                                <div class="document-title">Réservation Hôtel Ritz</div>
+                                <div class="document-meta">Paris • 10 Août 2023</div>
+                            </div>
+                            <a href="#" class="document-action">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="document-item">
+                            <div class="document-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="document-info">
+                                <div class="document-title">Tickets Vol Paris AF001</div>
+                                <div class="document-meta">New York - Paris • 10 Août 2023</div>
+                            </div>
+                            <a href="#" class="document-action">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="document-item">
+                            <div class="document-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="document-info">
+                                <div class="document-title">Tickets Musée du Louvre</div>
+                                <div class="document-meta">Paris • 11 Août 2023</div>
+                            </div>
+                            <a href="#" class="document-action">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="document-item">
+                            <div class="document-icon">
+                                <i class="fas fa-file-image"></i>
+                            </div>
+                            <div class="document-info">
+                                <div class="document-title">Plan quartier Marais</div>
+                                <div class="document-meta">Paris • Guide</div>
+                            </div>
+                            <a href="#" class="document-action">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
             
-            <div class="timeline" id="timeline-content">
-                <!-- Timeline items will be loaded here dynamically -->
+            <!-- Detail View (Hidden by default, toggle with JS) -->
+            <div class="view detail-view" style="display: none;" id="voyage-paris">
+                <div class="detail-header">
+                    <img src="https://source.unsplash.com/featured/?paris,eiffel" alt="Paris" class="detail-img">
+                    <button class="back-button" onclick="history.back()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button class="action-button">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="action-button">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                    
+                    <div class="thumbnail-gallery">
+                        <img src="https://source.unsplash.com/featured/?paris,eiffel" alt="Paris" class="thumbnail active">
+                        <img src="https://source.unsplash.com/featured/?paris,louvre" alt="Louvre" class="thumbnail">
+                        <img src="https://source.unsplash.com/featured/?paris,arc" alt="Arc de Triomphe" class="thumbnail">
+                        <img src="https://source.unsplash.com/featured/?paris,seine" alt="Seine" class="thumbnail">
+                        <img src="https://source.unsplash.com/featured/?paris,montmartre" alt="Montmartre" class="thumbnail">
+                        <div class="thumbnail more-photos">+3</div>
+                    </div>
+                </div>
+                
+                <div class="detail-content">
+                    <div class="detail-title">
+                        <span>Paris - Août 2023</span>
+                        <span class="detail-price">6 jours</span>
+                    </div>
+                    <div class="detail-subtitle">France</div>
+                    
+                    <div class="map-container">
+                        <div id="map"></div>
+                    </div>
+                    
+                    <div class="detail-info">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Vol aller</div>
+                                <div class="info-value">10 Août 2023 - 08:30</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-hotel"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Hébergement</div>
+                                <div class="info-value">Hôtel Ritz Paris</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Durée</div>
+                                <div class="info-value">10 - 15 Août 2023</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin: 25px 0 15px;">Chronologie du séjour</h3>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">
+                                    <span>Vol New York-Paris</span>
+                                    <span class="timeline-date">10 Août, 08:30</span>
+                                </div>
+                                <div class="timeline-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Terminal 2E, Charles de Gaulle</span>
+                                </div>
+                                <div class="timeline-description">
+                                    Vol AF001 - Classe Affaires
+                                </div>
+                                <div class="timeline-attachments">
+                                    <a href="#" class="attachment">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <span>Carte d'embarquement.pdf</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                <i class="fas fa-hotel"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">
+                                    <span>Hôtel Ritz Paris</span>
+                                    <span class="timeline-date">10 Août, 14:00</span>
+                                </div>
+                                <div class="timeline-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>15 Place Vendôme, 75001 Paris</span>
+                                </div>
+                                <div class="timeline-description">
+                                    Suite Deluxe avec vue<br>
+                                    Check-in: 10 Août - Check-out: 15 Août
+                                </div>
+                                <div class="timeline-attachments">
+                                    <a href="#" class="attachment">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <span>Confirmation_Ritz.pdf</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">
+                                    <span>Dîner au Jules Verne</span>
+                                    <span class="timeline-date">10 Août, 20:00</span>
+                                </div>
+                                <div class="timeline-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Tour Eiffel, Avenue Gustave Eiffel</span>
+                                </div>
+                                <div class="timeline-description">
+                                    Restaurant gastronomique avec vue sur Paris<br>
+                                    Réservation pour 2 personnes
+                                </div>
+                                <div class="timeline-attachments">
+                                    <a href="#" class="attachment">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <span>Reservation_Jules_Verne.pdf</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                <i class="fas fa-hiking"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">
+                                    <span>Visite privée du Louvre</span>
+                                    <span class="timeline-date">11 Août, 09:00</span>
+                                </div>
+                                <div class="timeline-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Musée du Louvre, Rue de Rivoli</span>
+                                </div>
+                                <div class="timeline-description">
+                                    Visite guidée privée du musée avec expert en histoire de l'art<br>
+                                    Durée: 3h
+                                </div>
+                                <div class="timeline-attachments">
+                                    <a href="#" class="attachment">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <span>Tickets_Louvre.pdf</span>
+                                    </a>
+                                    <a href="#" class="attachment">
+                                        <i class="fas fa-file-image"></i>
+                                        <span>Plan_Louvre.jpg</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-outline" style="margin-right: 15px;">
+                            <i class="fas fa-edit"></i>
+                            <span>Modifier</span>
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            <span>Ajouter un élément</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add Item Modal -->
+            <div class="modal" id="add-item-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Ajouter un élément</h3>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="add-item-form">
+                            <div class="form-group">
+                                <label for="item-type" class="form-label">Type d'élément</label>
+                                <select id="item-type" class="form-control" required>
+                                    <option value="">Sélectionnez un type</option>
+                                    <option value="flight">Vol</option>
+                                    <option value="accommodation">Hébergement</option>
+                                    <option value="activity">Activité</option>
+                                    <option value="restaurant">Restaurant</option>
+                                    <option value="other">Autre</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="item-title" class="form-label">Titre</label>
+                                <input type="text" id="item-title" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="item-date" class="form-label">Date et heure</label>
+                                <input type="datetime-local" id="item-date" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="item-location" class="form-label">Lieu</label>
+                                <input type="text" id="item-location" class="form-control location-autocomplete" placeholder="Commencez à taper une adresse...">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="item-description" class="form-label">Description</label>
+                                <textarea id="item-description" class="form-control"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="item-attachment" class="form-label">Pièces jointes</label>
+                                <input type="file" id="item-attachment" class="form-control" multiple>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline" id="cancel-btn">Annuler</button>
+                        <button type="submit" form="add-item-form" class="btn btn-primary">Ajouter</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Modal for adding new items -->
-    <div id="add-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Ajouter un élément</h2>
-            
-            <form id="add-item-form">
-                <div class="form-group">
-                    <label for="item-type">Type d'élément</label>
-                    <select id="item-type" required>
-                        <option value="">Sélectionnez un type</option>
-                        <option value="flight">Vol</option>
-                        <option value="accommodation">Hébergement</option>
-                        <option value="activity">Activité</option>
-                        <option value="restaurant">Restaurant</option>
-                        <option value="other">Autre</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="item-title">Titre</label>
-                    <input type="text" id="item-title" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="item-date">Date et heure</label>
-                    <input type="datetime-local" id="item-date" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="item-location">Lieu</label>
-                    <input type="text" id="item-location" class="location-autocomplete" placeholder="Commencez à taper une adresse...">
-                </div>
-                
-                <div class="form-group">
-                    <label for="item-description">Description</label>
-                    <textarea id="item-description"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="item-attachment">Pièces jointes</label>
-                    <input type="file" id="item-attachment" multiple>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" class="btn btn-danger" id="cancel-btn">Annuler</button>
-                    <button type="submit" class="btn btn-secondary">Ajouter</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal for creating new trip -->
-    <div id="trip-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Créer un nouveau voyage</h2>
-            
-            <form id="new-trip-form">
-                <div class="form-group">
-                    <label for="trip-name">Nom du voyage</label>
-                    <input type="text" id="trip-name" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="trip-start">Date de début</label>
-                    <input type="date" id="trip-start" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="trip-end">Date de fin</label>
-                    <input type="date" id="trip-end" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="trip-destination">Destination principale</label>
-                    <input type="text" id="trip-destination" required placeholder="Ex: Paris, Rome, Bali...">
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" class="btn btn-danger" id="cancel-trip-btn">Annuler</button>
-                    <button type="submit" class="btn btn-accent">Créer</button>
-                </div>
-            </form>
-        </div>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-home nav-icon"></i>
+                <span>Accueil</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-map-marked-alt nav-icon"></i>
+                <span>Itinéraires</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-plus-circle nav-icon"></i>
+                <span>Nouveau</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-file-alt nav-icon"></i>
+                <span>Documents</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-cog nav-icon"></i>
+                <span>Réglages</span>
+            </a>
+        </nav>
     </div>
     
     <script>
-        // Global variables
-        let map;
-        let markers = [];
-        let currentTrip = null;
-        const destinationImages = {
-            'Paris': 'https://source.unsplash.com/featured/?paris,eiffel',
-            'Rome': 'https://source.unsplash.com/featured/?rome,colosseum',
-            'Bali': 'https://source.unsplash.com/featured/?bali,beach',
-            'Tokyo': 'https://source.unsplash.com/featured/?tokyo,japan',
-            'New York': 'https://source.unsplash.com/featured/?newyork,skyline',
-            'London': 'https://source.unsplash.com/featured/?london,bigben',
-            'Barcelona': 'https://source.unsplash.com/featured/?barcelona,sagradafamilia',
-            'Dubai': 'https://source.unsplash.com/featured/?dubai,burj',
-            'Amsterdam': 'https://source.unsplash.com/featured/?amsterdam,canal',
-            'Venice': 'https://source.unsplash.com/featured/?venice,canal',
-            'Prague': 'https://source.unsplash.com/featured/?prague,castle',
-            'Hong Kong': 'https://source.unsplash.com/featured/?hongkong,skyline',
-            'Singapore': 'https://source.unsplash.com/featured/?singapore,marina',
-            'Sydney': 'https://source.unsplash.com/featured/?sydney,opera',
-            'default': 'https://source.unsplash.com/featured/?travel,landscape'
-        };
+        // Google Maps Initialization would go here
+        function initMap() {
+            // Your map initialization code
+        }
         
-        // Sample trips data for demo purposes
-        const tripsData = {
-            'paris': {
-                name: 'Paris - Août 2023',
-                destination: 'Paris',
-                center: { lat: 48.8566, lng: 2.3522 },
-                items: [
-                    {
-                        type: 'flight',
-                        title: 'Vol New York-Paris',
-                        date: '2023-08-10T08:30',
-                        location: 'Terminal 2E, Charles de Gaulle',
-                        description: 'Vol AF001 - Classe Affaires',
-                        attachments: ['Carte d\'embarquement.pdf'],
-                        position: { lat:
+        // Calculate days until next trip
+        function updateCountdown() {
+            // Find the next upcoming trip
+            const now = new Date();
+            
+            // Sample trip dates (in a real app, these would come from your data)
+            const trips = [
+                { name: "Tokyo", date: new Date("2024-01-15") },
+                { name: "Paris", date: new Date("2023-08-10") },
+                { name: "Rome", date: new Date("2023-10-15") },
+                { name: "Bali", date: new Date("2023-12-11") }
+            ];
+            
+            // Sort trips by date (ascending)
+            trips.sort((a, b) => a.date - b.date);
+            
+            // Find the next trip (first trip in the future)
+            const upcomingTrips = trips.filter(trip => trip.date > now);
+            
+            if (upcomingTrips.length > 0) {
+                const nextTrip = upcomingTrips[0];
+                
+                // Calculate days difference
+                const timeDiff = nextTrip.date.getTime() - now.getTime();
+                const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                
+                // Update the countdown display
+                const countdownDays = document.querySelector('.countdown-days');
+                const countdownDest = document.querySelector('.countdown-dest');
+                
+                if (countdownDays && countdownDest) {
+                    countdownDays.textContent = `J-${daysDiff}`;
+                    countdownDest.textContent = nextTrip.name;
+                }
+            }
+        }
+        
+        // Add event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize countdown
+            updateCountdown();
+            
+            // Update countdown daily
+            setInterval(updateCountdown, 86400000); // Update every 24 hours
+            
+            // Toggle card favorite
+            document.querySelectorAll('.card-favorite').forEach(function(favorite) {
+                favorite.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    this.classList.toggle('active');
+                    const icon = this.querySelector('i');
+                    if (this.classList.contains('active')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                    }
+                });
+            });
+            
+            // Tab switching
+            document.querySelectorAll('.tab').forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Thumbnail gallery
+            document.querySelectorAll('.thumbnail').forEach(function(thumbnail) {
+                thumbnail.addEventListener('click', function() {
+                    if (this.classList.contains('more-photos')) return;
+                    
+                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update main image
+                    const mainImg = this.closest('.detail-header').querySelector('.detail-img');
+                    if (mainImg) mainImg.src = this.src;
+                });
+            });
+            
+            // Modal functionality
+            const modals = document.querySelectorAll('.modal');
+            
+            // Open modal
+            document.querySelectorAll('[data-modal]').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const modalId = this.dataset.modal;
+                    document.getElementById(modalId).style.display = 'block';
+                });
+            });
+            
+            // Close modal with X button
+            document.querySelectorAll('.modal-close').forEach(function(close) {
+                close.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+            
+            // Close modal with cancel button
+            document.querySelectorAll('.modal .btn-outline').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                modals.forEach(function(modal) {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
