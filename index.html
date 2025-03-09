@@ -1,445 +1,154 @@
-<!-- API Google - chargé en premier -->
-    <script src="https://apis.google.com/js/api.js"></script>
-    
-    <!-- Scripts externes - chargés après l'API Google -->
-    <script src="google-drive-service.js"></script>
-    <script src="document-manager.js"></script>
-    
-    <!-- Script principal -->
-    <script>
-        // Définition de toutes les fonctions d'abord
-        
-        // Fonction pour vérifier si l'API Google est prête
-        function checkGoogleApiReady() {
-            return new Promise((resolve, reject) => {
-                // Vérifier si gapi est défini
-                if (typeof gapi === 'undefined') {
-                    // Attendre jusqu'à 5 secondes pour que gapi se charge
-                    let attempts = 0;
-                    const maxAttempts = 50; // 5 secondes (50 * 100ms)
-                    
-                    const checkInterval = setInterval(() => {
-                        attempts++;
-                        console.log(`Vérification de gapi... Tentative ${attempts}/${maxAttempts}`);
-                        
-                        if (typeof gapi !== 'undefined') {
-                            clearInterval(checkInterval);
-                            console.log('API Google chargée avec succès');
-                            resolve(true);
-                        // Récupérer les documents récents pour la page d'accueil
-        async function loadRecentDocuments() {
-            const documentsContainer = document.querySelector('.documents-container');
-            if (!documentsContainer) return;
+</div>
+                </div>
+            </div>
             
-            try {
-                // Vérifier si l'utilisateur est connecté à Google Drive
-                if (!driveService.isAuthenticated) {
-                    documentsContainer.innerHTML = `
-                        <div class="auth-prompt">
-                            <p>Connectez-vous à Google Drive pour accéder à vos documents</p>
-                            <button class="btn btn-primary" id="drive-auth-btn">
-                                <i class="fab fa-google"></i> Se connecter
-                            </button>
-                        </div>
-                    `;
-                    
-                    document.getElementById('drive-auth-btn').addEventListener('click', handleAuthClick);
-                    return;
-                }
+            <!-- Documents View -->
+            <div class="view documents-view" id="documents-view">
+                <header class="header">
+                    <h1 class="header-title">Mes Documents</h1>
+                    <button class="btn btn-primary" data-modal="add-document-modal">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </header>
                 
-                // Afficher un loader
-                documentsContainer.innerHTML = `
+                <div class="categories">
+                    <div class="tabs">
+                        <div class="tab active" data-filter="all">Tous</div>
+                        <div class="tab" data-filter="flight">Vols</div>
+                        <div class="tab" data-filter="accommodation">Hébergements</div>
+                        <div class="tab" data-filter="activity">Activités</div>
+                        <div class="tab" data-filter="other">Autres</div>
+                    </div>
+                </div>
+                
+                <div class="section-search">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Rechercher un document...">
+                    </div>
+                </div>
+                
+                <div class="documents-list">
+                    <!-- Les documents seront insérés ici par JavaScript -->
                     <div class="empty-state">
-                        <i class="fas fa-spinner fa-spin"></i>
+                        <i class="fas fa-file-alt empty-icon"></i>
                         <p>Chargement des documents...</p>
                     </div>
-                `;
-                
-                // S'assurer que le gestionnaire de documents est initialisé
-                if (!documentManager.isInitialized) {
-                    await documentManager.initialize();
-                }
-                
-                // Récupérer tous les documents
-                const documents = await documentManager.getAllDocuments();
-                
-                // Trier par date de modification
-                documents.sort((a, b) => new Date(b.modifiedTime) - new Date(a.modifiedTime));
-                
-                // Limiter à 5 documents récents
-                const recentDocuments = documents.slice(0, 5);
-                
-                // Mettre à jour l'affichage
-                if (recentDocuments.length === 0) {
-                    documentsContainer.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-file-alt empty-icon"></i>
-                            <p>Aucun document disponible</p>
-                            <button class="btn btn-primary" data-modal="add-document-modal">
-                                <i class="fas fa-plus"></i> Ajouter un document
-                            </button>
-                        </div>
-                    `;
-                    
-                    // Ajouter l'écouteur au bouton
-                    documentsContainer.querySelector('button[data-modal="add-document-modal"]').addEventListener('click', function() {
-                        document.getElementById('add-document-modal').style.display = 'block';
-                    });
-                    
-                    return;
-                }
-                
-                let html = '';
-                recentDocuments.forEach(doc => {
-                    // Déterminer l'icône basée sur le type MIME
-                    let iconClass = 'fa-file';
-                    if (doc.mimeType.includes('pdf')) {
-                        iconClass = 'fa-file-pdf';
-                    } else if (doc.mimeType.includes('image')) {
-                        iconClass = 'fa-file-image';
-                    } else if (doc.mimeType.includes('word')) {
-                        iconClass = 'fa-file-word';
-                    } else if (doc.mimeType.includes('spreadsheet') || doc.mimeType.includes('excel')) {
-                        iconClass = 'fa-file-excel';
-                    }
-                    
-                    // Formater la date
-                    const modifiedDate = new Date(doc.modifiedTime);
-                    const formattedDate = modifiedDate.toLocaleDateString('fr-FR', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric'
-                    });
-                    
-                    html += `
-                        <div class="document-item" data-file-id="${doc.id}">
-                            <div class="document-icon">
-                                <i class="fas ${iconClass}"></i>
-                            </div>
-                            <div class="document-info">
-                                <div class="document-title">${doc.name}</div>
-                                <div class="document-meta">${doc.tripName || 'Document'} • ${formattedDate}</div>
-                            </div>
-                            <a href="${doc.webViewLink}" target="_blank" class="document-action">
-                                <i class="fas fa-download"></i>
-                            </a>
-                        </div>
-                    `;
-                });
-                
-                documentsContainer.innerHTML = html;
-                
-                // Ajouter des écouteurs d'événements pour les actions sur les documents
-                documentsContainer.querySelectorAll('.document-item').forEach(item => {
-                    item.addEventListener('click', function(e) {
-                        if (e.target.closest('.document-action')) return; // Ignorer si l'action de téléchargement a été cliquée
-                        
-                        // Afficher les détails du document
-                        const fileId = this.dataset.fileId;
-                        // Ici, vous pourriez ouvrir une modale avec plus de détails sur le document
-                    });
-                });
-                
-            } catch (error) {
-                console.error('Erreur lors du chargement des documents récents:', error);
-                documentsContainer.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-circle empty-icon"></i>
-                        <p>Erreur lors du chargement des documents</p>
-                        <button class="btn btn-outline" onclick="loadRecentDocuments()">
-                            <i class="fas fa-redo"></i> Réessayer
-                        </button>
-                    </div>
-                `;
-            }
-        }
-        
-        // Charger tous les documents pour la vue Documents
-        async function loadAllDocuments() {
-            const documentsList = document.querySelector('.documents-list');
-            if (!documentsList) return;
+                </div>
+            </div>
             
-            try {
-                // Vérifier si l'utilisateur est connecté
-                if (!driveService.isAuthenticated) {
-                    documentsList.innerHTML = `
-                        <div class="auth-prompt">
-                            <p>Connectez-vous à Google Drive pour accéder à vos documents</p>
-                            <button class="btn btn-primary" id="drive-auth-all-btn">
-                                <i class="fab fa-google"></i> Se connecter
-                            </button>
-                        </div>
-                    `;
-                    
-                    document.getElementById('drive-auth-all-btn').addEventListener('click', handleAuthClick);
-                    return;
-                }
-                
-                // Afficher un loader
-                documentsList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>Chargement des documents...</p>
+            <!-- Add Item Modal -->
+            <div class="modal" id="add-item-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Ajouter un élément</h3>
+                        <button class="modal-close">&times;</button>
                     </div>
-                `;
-                
-                // S'assurer que le gestionnaire de documents est initialisé
-                if (!documentManager.isInitialized) {
-                    await documentManager.initialize();
-                }
-                
-                // Récupérer tous les documents
-                const documents = await documentManager.getAllDocuments();
-                
-                // Trier par date de modification
-                documents.sort((a, b) => new Date(b.modifiedTime) - new Date(a.modifiedTime));
-                
-                // Mettre à jour l'affichage
-                if (documents.length === 0) {
-                    documentsList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-file-alt empty-icon"></i>
-                            <p>Aucun document disponible</p>
-                            <button class="btn btn-primary" data-modal="add-document-modal">
-                                <i class="fas fa-plus"></i> Ajouter un document
-                            </button>
-                        </div>
-                    `;
-                    
-                    // Ajouter l'écouteur au bouton
-                    documentsList.querySelector('button[data-modal="add-document-modal"]').addEventListener('click', function() {
-                        document.getElementById('add-document-modal').style.display = 'block';
-                    });
-                    
-                    return;
-                }
-                
-                let html = '';
-                documents.forEach(doc => {
-                    // Déterminer l'icône basée sur le type MIME
-                    let iconClass = 'fa-file';
-                    if (doc.mimeType.includes('pdf')) {
-                        iconClass = 'fa-file-pdf';
-                    } else if (doc.mimeType.includes('image')) {
-                        iconClass = 'fa-file-image';
-                    } else if (doc.mimeType.includes('word')) {
-                        iconClass = 'fa-file-word';
-                    } else if (doc.mimeType.includes('spreadsheet') || doc.mimeType.includes('excel')) {
-                        iconClass = 'fa-file-excel';
-                    }
-                    
-                    // Déterminer le type de document
-                    const docType = doc.customMetadata?.docType || 'other';
-                    
-                    // Formater la date
-                    const modifiedDate = new Date(doc.modifiedTime);
-                    const formattedDate = modifiedDate.toLocaleDateString('fr-FR', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric'
-                    });
-                    
-                    html += `
-                        <div class="document-item" data-file-id="${doc.id}" data-type="${docType}">
-                            <div class="document-icon">
-                                <i class="fas ${iconClass}"></i>
+                    <div class="modal-body">
+                        <form id="add-item-form">
+                            <div class="form-group">
+                                <label for="item-type" class="form-label">Type d'élément</label>
+                                <select id="item-type" name="item-type" class="form-control" required>
+                                    <option value="">Sélectionnez un type</option>
+                                    <option value="flight">Vol</option>
+                                    <option value="accommodation">Hébergement</option>
+                                    <option value="activity">Activité</option>
+                                    <option value="restaurant">Restaurant</option>
+                                    <option value="document">Document</option>
+                                    <option value="other">Autre</option>
+                                </select>
                             </div>
-                            <div class="document-info">
-                                <div class="document-title">${doc.name}</div>
-                                <div class="document-meta">${doc.tripName || 'Document'} • ${formattedDate}</div>
-                            </div>
-                            <a href="${doc.webViewLink}" target="_blank" class="document-action">
-                                <i class="fas fa-download"></i>
-                            </a>
-                        </div>
-                    `;
-                });
-                
-                documentsList.innerHTML = html;
-                
-                // Ajouter des écouteurs d'événements pour les actions sur les documents
-                documentsList.querySelectorAll('.document-item').forEach(item => {
-                    item.addEventListener('click', function(e) {
-                        if (e.target.closest('.document-action')) return; // Ignorer si l'action de téléchargement a été cliquée
-                        
-                        // Afficher les détails du document
-                        const fileId = this.dataset.fileId;
-                        // Ici, vous pourriez ouvrir une modale avec plus de détails sur le document
-                    });
-                });
-                
-                // Activer le filtrage par onglet
-                document.querySelectorAll('.documents-view .tab').forEach(tab => {
-                    tab.addEventListener('click', function() {
-                        // Mettre à jour l'état actif
-                        document.querySelectorAll('.documents-view .tab').forEach(t => t.classList.remove('active'));
-                        this.classList.add('active');
-                        
-                        const filter = this.dataset.filter;
-                        
-                        // Filtrer les documents
-                        documentsList.querySelectorAll('.document-item').forEach(item => {
-                            if (filter === 'all' || item.dataset.type === filter) {
-                                item.style.display = '';
-                            } else {
-                                item.style.display = 'none';
-                            }
-                        });
-                    });
-                });
-                
-                // Activer la recherche
-                const searchInput = document.querySelector('.search-input');
-                if (searchInput) {
-                    searchInput.addEventListener('input', function() {
-                        const query = this.value.toLowerCase().trim();
-                        
-                        if (query === '') {
-                            // Réappliquer le filtre actuel
-                            const activeTab = document.querySelector('.documents-view .tab.active');
-                            const filter = activeTab.dataset.filter;
                             
-                            documentsList.querySelectorAll('.document-item').forEach(item => {
-                                if (filter === 'all' || item.dataset.type === filter) {
-                                    item.style.display = '';
-                                } else {
-                                    item.style.display = 'none';
-                                }
-                            });
-                        } else {
-                            // Recherche dans les titres de documents
-                            documentsList.querySelectorAll('.document-item').forEach(item => {
-                                const title = item.querySelector('.document-title').textContent.toLowerCase();
-                                const meta = item.querySelector('.document-meta').textContent.toLowerCase();
-                                
-                                if (title.includes(query) || meta.includes(query)) {
-                                    item.style.display = '';
-                                } else {
-                                    item.style.display = 'none';
-                                }
-                            });
-                        }
-                    });
-                }
-                
-            } catch (error) {
-                console.error('Erreur lors du chargement des documents:', error);
-                documentsList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-circle empty-icon"></i>
-                        <p>Erreur lors du chargement des documents</p>
-                        <button class="btn btn-outline" onclick="loadAllDocuments()">
-                            <i class="fas fa-redo"></i> Réessayer
-                        </button>
+                            <div class="form-group">
+                                <label for="item-title" class="form-label">Titre</label>
+                                <input type="text" id="item-title" name="item-title" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="item-date" class="form-label">Date et heure</label>
+                                <input type="datetime-local" id="item-date" name="item-date" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="item-location" class="form-label">Lieu</label>
+                                <input type="text" id="item-location" name="item-location" class="form-control location-autocomplete" placeholder="Commencez à taper une adresse...">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="item-description" class="form-label">Description</label>
+                                <textarea id="item-description" name="item-description" class="form-control"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="item-attachment" class="form-label">Pièces jointes</label>
+                                <input type="file" id="item-attachment" name="item-attachment" class="form-control" multiple>
+                                <div class="file-preview-container">
+                                    <!-- Les fichiers sélectionnés apparaîtront ici -->
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                `;
-            }
-        }
-        
-        // Fonctions utilitaires
-        function getIconForItemType(type) {
-            switch (type) {
-                case 'flight': return 'fa-plane';
-                case 'accommodation': return 'fa-hotel';
-                case 'activity': return 'fa-hiking';
-                case 'restaurant': return 'fa-utensils';
-                case 'document': return 'fa-file-alt';
-                default: return 'fa-calendar-alt';
-            }
-        }
-        
-        function formatDateTime(dateTimeString) {
-            if (!dateTimeString) return '';
-            
-            const date = new Date(dateTimeString);
-            const day = date.getDate().toString().padStart(2, '0');
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const hours = date.getHours().toString().padStart(2, '0');
-            const minutes = date.getMinutes().toString().padStart(2, '0');
-            
-            return `${day}/${month}, ${hours}:${minutes}`;
-        }
-        
-        // Initialisation de l'application - Toutes les fonctions sont déjà définies
-        document.addEventListener('DOMContentLoaded', async function() {
-            console.log('Initialisation de l\'application...');
-            
-            // Initialiser le compte à rebours
-            updateCountdown();
-            
-            // Mettre à jour le compte à rebours quotidiennement
-            setInterval(updateCountdown, 86400000); // Mettre à jour toutes les 24 heures
-            
-            // Configurer tous les listeners d'événements
-            setupEventListeners();
-            
-            // Tentative d'initialisation des services Google
-            try {
-                // Afficher un indicateur de chargement
-                showLoader('Initialisation des services Google...');
-                
-                // Vérifier que l'API Google est chargée
-                await checkGoogleApiReady();
-                
-                // Tenter d'initialiser Google Drive avec gestion des erreurs
-                try {
-                    await driveService.initialize();
-                    
-                    // Initialiser le gestionnaire de documents
-                    await documentManager.initialize();
-                    
-                    // Configurer les téléchargements de documents
-                    setupDocumentUploads();
-                    
-                    // Récupérer les documents récents
-                    loadRecentDocuments();
-                    
-                    // Masquer l'indicateur de chargement
-                    hideLoader();
-                } catch (driveError) {
-                    console.error('Erreur lors de l\'initialisation de Google Drive:', driveError);
-                    
-                    // Masquer l'indicateur de chargement
-                    hideLoader();
-                    
-                    // Afficher une notification d'erreur plus conviviale
-                    showNotification('Veuillez vous connecter à Google Drive pour utiliser toutes les fonctionnalités', 'info');
-                    
-                    // Afficher les boutons de connexion à la place des documents
-                    displayAuthButtons();
-                }
-            } catch (error) {
-                console.error('Erreur lors de l\'initialisation des services Google:', error);
-                
-                // Masquer l'indicateur de chargement
-                hideLoader();
-                
-                // Afficher une notification d'erreur
-                showNotification('Problème de connexion aux services Google. Veuillez réessayer plus tard.', 'error');
-            }
-        });
-    </script>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline" id="cancel-btn">Annuler</button>
+                        <button type="submit" form="add-item-form" class="btn btn-primary">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ajout Document Modal -->
+            <div class="modal" id="add-document-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Ajouter un document</h3>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="add-document-form">
+                            <div class="form-group">
+                                <label for="document-type" class="form-label">Type de document</label>
+                                <select id="document-type" name="document-type" class="form-control" required>
+                                    <option value="">Sélectionnez un type</option>
+                                    <option value="flight">Billets de vol</option>
+                                    <option value="accommodation">Réservation d'hôtel</option>
+                                    <option value="activity">Tickets d'activité</option>
+                                    <option value="insurance">Assurance voyage</option>
+                                    <option value="visa">Visa / Documents officiels</option>
+                                    <option value="map">Carte / Itinéraire</option>
+                                    <option value="other">Autre</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="document-title" class="form-label">Titre</label>
+                                <input type="text" id="document-title" name="document-title" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="document-trip" class="form-label">Voyage associé</label>
+                                <select id="document-trip" name="document-trip" class="form-control">
+                                    <option value="">Aucun voyage spécifique</option>
+                                    <option value="paris">Paris</option>
+                                    <option value="rome">Rome</option>
+                                    <option value="bali">Bali</option>
+                                    <option value="tokyo">Tokyo</option>
+                                </select>
+                            </div>
+                            <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1A2B3C">
+    <title>BCP Travels</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- API Google Maps avec clé API correcte -->
-    <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZaOIKkyuhs9SaEBjqKNXoTvag1w4nQvo&callback=initMap">
-    </script>
-</body>
-</html> else if (attempts >= maxAttempts) {
-                            clearInterval(checkInterval);
-                            console.error('Délai d\'attente dépassé pour le chargement de l\'API Google');
-                            reject(new Error('Échec du chargement de l\'API Google'));
-                        }
-                    }, 100);
-                } else {
-                    console.log('API Google déjà chargée');
-                    resolve(true);
-                }
-            });
-        }
-        
-        // Initialisation des cartes pour chaque destination
-        function initMap() {
+    <!-- Définir la fonction initMap globalement avant le chargement de Google Maps -->
+    <script>
+        // Fonction globale pour l'initialisation de Google Maps
+        window.initMap = function() {
+            console.log("Google Maps API initialisée");
+            
             // Coordonnées des destinations
             const parisCoords = { lat: 48.856614, lng: 2.3522219 };
             const romeCoords = { lat: 41.9027835, lng: 12.4963655 };
@@ -465,9 +174,9 @@
                 ]
             };
             
-            // Vérifier si Google Maps est chargé
+            // Vérifier si Google Maps est chargé correctement
             if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
-                console.error('Google Maps API n\'est pas chargée');
+                console.error('Google Maps API n\'est pas chargée correctement');
                 return;
             }
             
@@ -519,9 +228,9 @@
                 addMarker(tokyoMap, { lat: 35.6762551, lng: 139.6982951 }, 'Sanctuaire Meiji');
                 addMarker(tokyoMap, { lat: 35.6595056, lng: 139.7005627 }, 'Shibuya Crossing');
             }
-        }
+        };
         
-        // Fonction pour ajouter un marqueur
+        // Fonction pour ajouter un marqueur sur la carte
         function addMarker(map, position, title) {
             if (!map || !position) return null;
             
@@ -543,610 +252,1407 @@
             
             return marker;
         }
+    </script>
+    
+    <style>
+        :root {
+            --primary-color: #1A2B3C;     /* Bleu sombre */
+            --secondary-color: #2D4356;   /* Bleu gris */
+            --accent-color: #FF8C42;      /* Orange vif */
+            --dark-color: #121820;        /* Presque noir */
+            --light-color: #F8F9FA;       /* Blanc cassé */
+            --gray-color: #E9ECEF;        /* Gris très clair */
+            --text-dark: #212529;         /* Texte principal */
+            --text-light: #F8F9FA;        /* Texte clair */
+            --text-muted: #6C757D;        /* Texte secondaire */
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 20px;
+            --box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        }
         
-        // Calculate days until next trip
-        function updateCountdown() {
-            // Trouver le prochain voyage à venir
-            const now = new Date();
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Main Layout */
+        .app-layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 80px; /* Space for bottom nav */
+        }
+        
+        /* Header and Navigation */
+        .header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .header-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .countdown-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: var(--border-radius-md);
+            padding: 8px 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .countdown-days {
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .countdown-dest {
+            font-size: 12px;
+            margin-top: -3px;
+        }
+        
+        /* Categories Tabs */
+        .categories {
+            padding: 0 15px;
+            margin: 20px 0;
+        }
+        
+        .categories-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding: 0 5px;
+        }
+        
+        .tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 5px;
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        .tabs::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            white-space: nowrap;
+            border-radius: var(--border-radius-lg);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: var(--gray-color);
+            color: var(--text-muted);
+        }
+        
+        .tab.active {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+        
+        /* Cards Grid */
+        .cards-section {
+            padding: 0 15px;
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 0 5px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+        }
+        
+        .section-action {
+            color: var(--accent-color);
+            font-weight: 500;
+            text-decoration: none;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-img-container {
+            height: 120px;
+            position: relative;
+        }
+        
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .card-favorite {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        
+        .card-favorite:hover, .card-favorite.active {
+            background-color: white;
+            color: var(--accent-color);
+        }
+        
+        .card-content {
+            padding: 15px;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .card-location {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+        
+        .card-date {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        /* Document List */
+        .document-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            margin-bottom: 10px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .document-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(26, 43, 60, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+        
+        .document-info {
+            margin-left: 15px;
+            flex: 1;
+        }
+        
+        .document-title {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+        
+        .document-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .document-action {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: var(--gray-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .document-action:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        /* Detail View Header */
+        .detail-header {
+            position: relative;
+            height: 280px;
+        }
+        
+        .detail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .detail-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            color: white;
+        }
+        
+        .back-button, .action-button {
+            position: absolute;
+            top: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            color: var(--text-dark);
+        }
+        
+        .back-button {
+            left: 20px;
+        }
+        
+        .action-button {
+            right: 20px;
+        }
+        
+        .action-button + .action-button {
+            right: 70px;
+        }
+        
+        .thumbnail-gallery {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .thumbnail-gallery::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .thumbnail {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .thumbnail:hover, .thumbnail.active {
+            border-color: var(--accent-color);
+        }
+        
+        /* Detail Content */
+        .detail-content {
+            padding: 20px;
+        }
+        
+        .detail-title {
+            font-size: 24px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .detail-price {
+            font-size: 22px;
+            color: var(--accent-color);
+        }
+        
+        .detail-subtitle {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-info {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-color);
+        }
+        
+        .info-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--gray-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+        
+        .info-content {
+            flex: 1;
+        }
+        
+        .info-label {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        .info-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        /* Timeline */
+        .timeline {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 15px;
+            position: relative;
+        }
+        
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 17px;
+            top: 35px;
+            bottom: -20px;
+            width: 2px;
+            background-color: var(--gray-color);
+        }
+        
+        .timeline-marker {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            border: 2px solid var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            flex-shrink: 0;
+            z-index: 1;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: 15px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .timeline-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .timeline-date {
+            font-size: 12px;
+            color: var(--text-muted);
+            background-color: var(--gray-color);
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+        
+        .timeline-location {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        
+        .timeline-description {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-attachments {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .attachment {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: var(--primary-color);
+            background-color: var(--gray-color);
+            padding: 5px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .attachment:hover {
+            background-color: rgba(240, 140, 66, 0.15);
+            color: var(--accent-color);
+        }
+        
+        /* Map View */
+        .map-container {
+            height: 300px;
+            background-color: var(--gray-color);
+            margin-bottom: 20px;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--box-shadow);
+        }
+        
+        #map-paris, #map-rome, #map-bali, #map-tokyo {
+            height: 100%;
+            width: 100%;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 15px;
+            border-radius: var(--border-radius-md);
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1.5px solid var(--primary-color);
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 12px;
+            gap: 5px;
+        }
+        
+        .nav-item.active {
+            color: var(--accent-color);
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 30px auto;
+            width: 90%;
+            max-width: 500px;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: modalFadeIn 0.3s;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--gray-color);
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+        
+        .modal-body {
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--gray-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid var(--gray-color);
+            border-radius: var(--border-radius-md);
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.1);
+        }
+        
+        /* View Management */
+        .view {
+            display: none;
+        }
+        
+        .view.active {
+            display: block;
+        }
+        
+        /* Styles pour le loader */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+        
+        .loader-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius-lg);
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 15px;
+            border: 4px solid var(--gray-color);
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loader-message {
+            color: var(--text-dark);
+            font-weight: 500;
+            margin: 0;
+        }
+        
+        /* Styles pour les notifications */
+        .notification {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            min-width: 280px;
+            max-width: 90%;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: 15px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 9000;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        
+        .notification.visible {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .notification.success {
+            border-left: 4px solid #28a745;
+        }
+        
+        .notification.success i {
+            color: #28a745;
+        }
+        
+        .notification.error {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .notification.error i {
+            color: #dc3545;
+        }
+        
+        .notification.info {
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .notification.info i {
+            color: var(--accent-color);
+        }
+        
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        /* Styles pour la prévisualisation des fichiers */
+        .file-preview-container {
+            margin-top: 10px;
+        }
+        
+        .file-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background-color: var(--gray-color);
+            border-radius: var(--border-radius-sm);
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .file-item i {
+            color: var(--primary-color);
+        }
+        
+        .file-item small {
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+        
+        /* Styles pour l'état vide */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 0;
+            text-align: center;
+        }
+        
+        .empty-icon {
+            font-size: 50px;
+            color: var(--gray-color);
+            margin-bottom: 15px;
+        }
+        
+        /* Styles pour le prompt d'authentification */
+        .auth-prompt {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            text-align: center;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--box-shadow);
+        }
+        
+        /* Vue Documents */
+        .section-search {
+            padding: 0 15px;
+            margin: 15px 0;
+        }
+        
+        .search-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: none;
+            border-radius: var(--border-radius-lg);
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            font-size: 16px;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--accent-color), var(--box-shadow);
+        }
+        
+        .documents-list {
+            padding: 0 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .app-layout {
+                max-width: 800px;
+                margin: 0 auto;
+                border-left: 1px solid var(--gray-color);
+                border-right: 1px solid var(--gray-color);
+            }
             
-            // Données des voyages (dans une application réelle, ces données viendraient d'une base de données ou d'une API)
-            const trips = [
-                { name: "Tokyo", date: new Date("2024-01-15") },
-                { name: "Paris", date: new Date("2023-08-10") },
-                { name: "Rome", date: new Date("2023-10-15") },
-                { name: "Bali", date: new Date("2023-12-11") }
-            ];
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
             
-            // Trier les voyages par date (ascendant)
-            trips.sort((a, b) => a.date - b.date);
+            .detail-header {
+                height: 220px;
+            }
             
-            // Trouver le prochain voyage (premier voyage dans le futur)
-            const upcomingTrips = trips.filter(trip => trip.date > now);
-            
-            if (upcomingTrips.length > 0) {
-                const nextTrip = upcomingTrips[0];
+            .thumbnail {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div id="loader">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p class="loader-message">Chargement...</p>
+        </div>
+    </div>
+    
+    <div class="app-layout">
+        <div class="content-wrapper">
+            <!-- Home View -->
+            <div class="view home-view active" id="home-view">
+                <header class="header">
+                    <h1 class="header-title">BCP Travels</h1>
+                    <div class="countdown-badge">
+                        <div class="countdown-days">J-18</div>
+                        <div class="countdown-dest">Tokyo</div>
+                    </div>
+                </header>
                 
-                // Calculer la différence en jours
-                const timeDiff = nextTrip.date.getTime() - now.getTime();
-                const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                
-                // Mettre à jour l'affichage du compte à rebours
-                const countdownDays = document.querySelector('.countdown-days');
-                const countdownDest = document.querySelector('.countdown-dest');
-                
-                if (countdownDays && countdownDest) {
-                    countdownDays.textContent = `J-${daysDiff}`;
-                    countdownDest.textContent = nextTrip.name;
-                }
-            }
-        }
-        
-        // Fonctions de gestion des vues
-        function showView(viewId) {
-            // Cacher toutes les vues
-            document.querySelectorAll('.view').forEach(view => {
-                view.classList.remove('active');
-            });
-            
-            // Afficher la vue demandée
-            const view = document.getElementById(viewId);
-            if (view) {
-                view.classList.add('active');
-                
-                // Mettre à jour l'état actif de la navigation
-                document.querySelectorAll('.nav-item').forEach(item => {
-                    if (item.dataset.view === viewId) {
-                        item.classList.add('active');
-                    } else {
-                        item.classList.remove('active');
-                    }
-                });
-            }
-        }
-        
-        // Fonction pour obtenir le voyage en cours
-        function getCurrentTrip() {
-            // Déterminer le voyage en cours en fonction de la vue active
-            const activeDetailView = document.querySelector('.detail-view.active');
-            if (activeDetailView) {
-                const viewId = activeDetailView.id;
-                return viewId.replace('-view', '');
-            }
-            
-            // Par défaut, retourner 'General'
-            return 'General';
-        }
-        
-        // Fonction pour afficher un indicateur de chargement
-        function showLoader(message = 'Chargement...') {
-            const loader = document.getElementById('loader');
-            
-            if (loader) {
-                loader.querySelector('.loader-message').textContent = message;
-                loader.style.display = 'flex';
-            }
-        }
-        
-        // Fonction pour masquer l'indicateur de chargement
-        function hideLoader() {
-            const loader = document.getElementById('loader');
-            if (loader) {
-                loader.style.display = 'none';
-            }
-        }
-        
-        // Fonction pour afficher une notification
-        function showNotification(message, type = 'info') {
-            // Supprimer toute notification existante
-            const existingNotifications = document.querySelectorAll('.notification');
-            existingNotifications.forEach(notification => {
-                notification.remove();
-            });
-            
-            // Créer une nouvelle notification
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.innerHTML = `
-                <div class="notification-content">
-                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
-                    <span>${message}</span>
+                <div class="categories">
+                    <h2 class="categories-title">Mes voyages</h2>
+                    <div class="tabs">
+                        <div class="tab active" data-filter="all">Tous</div>
+                        <div class="tab" data-filter="upcoming">À venir</div>
+                        <div class="tab" data-filter="past">Passés</div>
+                        <div class="tab" data-filter="favorites">Favoris</div>
+                    </div>
                 </div>
-                <button class="notification-close">&times;</button>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Animation d'entrée
-            setTimeout(() => {
-                notification.classList.add('visible');
-            }, 10);
-            
-            // Auto-fermeture après 5 secondes
-            const timeout = setTimeout(() => {
-                closeNotification(notification);
-            }, 5000);
-            
-            // Fermeture manuelle
-            notification.querySelector('.notification-close').addEventListener('click', () => {
-                clearTimeout(timeout);
-                closeNotification(notification);
-            });
-        }
-        
-        // Fonction pour fermer une notification
-        function closeNotification(notification) {
-            notification.classList.remove('visible');
-            setTimeout(() => {
-                notification.remove();
-            }, 300);
-        }
-        
-        // Fonction utilitaire pour formater la taille des fichiers
-        function formatFileSize(bytes) {
-            if (bytes < 1024) return bytes + ' octets';
-            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-            else if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + ' MB';
-            else return (bytes / 1073741824).toFixed(1) + ' GB';
-        }
-        
-        // Fonction pour configurer tous les écouteurs d'événements
-        function setupEventListeners() {
-            console.log('Configuration des écouteurs d\'événements...');
-            
-            // Événement de clic sur les cartes - navigation vers la vue détaillée
-            document.querySelectorAll('.card').forEach(function(card) {
-                card.addEventListener('click', function() {
-                    const tripId = this.dataset.trip;
-                    if (tripId) {
-                        showView(`${tripId}-view`);
-                    }
-                });
-            });
-            
-            // Basculer le favori de la carte
-            document.querySelectorAll('.card-favorite').forEach(function(favorite) {
-                favorite.addEventListener('click', function(e) {
-                    e.stopPropagation(); // Empêcher le clic sur la carte
-                    this.classList.toggle('active');
-                    const icon = this.querySelector('i');
-                    if (this.classList.contains('active')) {
-                        icon.classList.remove('far');
-                        icon.classList.add('fas');
-                    } else {
-                        icon.classList.remove('fas');
-                        icon.classList.add('far');
-                    }
-                });
-            });
-            
-            // Changement d'onglet
-            document.querySelectorAll('.tab').forEach(function(tab) {
-                tab.addEventListener('click', function() {
-                    // Récupérer tous les onglets dans le même conteneur
-                    const tabs = this.closest('.tabs').querySelectorAll('.tab');
-                    tabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
+                
+                <div class="cards-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Voyages planifiés</h2>
+                        <a href="#" class="section-action">Voir tout</a>
+                    </div>
                     
-                    // Filtrer le contenu en fonction de l'onglet sélectionné
-                    const filter = this.dataset.filter;
-                    // Logique de filtrage à implémenter si nécessaire
-                });
-            });
-            
-            // Navigation inférieure
-            document.querySelectorAll('.nav-item[data-view]').forEach(function(navItem) {
-                navItem.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const viewId = this.dataset.view;
-                    if (viewId) {
-                        // Charger les documents si on va à la vue documents
-                        if (viewId === 'documents-view') {
-                            loadAllDocuments();
-                        }
+                    <div class="cards-grid">
+                        <div class="card" data-trip="paris">
+                            <div class="card-img-container">
+                                <img src="https://source.unsplash.com/featured/?paris,eiffel" alt="Paris" class="card-img">
+                                <div class="card-favorite">
+                                    <i class="far fa-heart"></i>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">Paris</h3>
+                                <div class="card-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>France</span>
+                                </div>
+                                <div class="card-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>10 - 15 Août 2023</span>
+                                </div>
+                            </div>
+                        </div>
                         
-                        showView(viewId);
-                    }
-                });
-            });
-            
-            // Ouvrir la modale pour un nouveau voyage
-            document.querySelectorAll('.nav-item[data-modal]').forEach(function(navItem) {
-                navItem.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const modalId = this.dataset.modal;
-                    const modal = document.getElementById(modalId);
-                    if (modal) {
-                        modal.style.display = 'block';
-                    }
-                });
-            });
-            
-            // Galerie de vignettes
-            document.querySelectorAll('.thumbnail').forEach(function(thumbnail) {
-                thumbnail.addEventListener('click', function() {
-                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
+                        <div class="card" data-trip="rome">
+                            <div class="card-img-container">
+                                <img src="https://source.unsplash.com/featured/?rome,colosseum" alt="Rome" class="card-img">
+                                <div class="card-favorite active">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">Rome</h3>
+                                <div class="card-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Italie</span>
+                                </div>
+                                <div class="card-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>15 - 20 Oct 2023</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card" data-trip="bali">
+                            <div class="card-img-container">
+                                <img src="https://source.unsplash.com/featured/?bali,beach" alt="Bali" class="card-img">
+                                <div class="card-favorite">
+                                    <i class="far fa-heart"></i>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">Bali</h3>
+                                <div class="card-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Indonésie</span>
+                                </div>
+                                <div class="card-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>11 - 18 Déc 2023</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card" data-trip="tokyo">
+                            <div class="card-img-container">
+                                <img src="https://source.unsplash.com/featured/?tokyo,japan" alt="Tokyo" class="card-img">
+                                <div class="card-favorite">
+                                    <i class="far fa-heart"></i>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">Tokyo</h3>
+                                <div class="card-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Japon</span>
+                                </div>
+                                <div class="card-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>15 - 22 Jan 2024</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cards-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Documents récents</h2>
+                        <a href="#" class="section-action" id="view-all-docs">Voir tout</a>
+                    </div>
                     
-                    // Mettre à jour l'image principale
-                    const mainImg = this.closest('.detail-header').querySelector('.detail-img');
-                    if (mainImg) mainImg.src = this.src;
-                });
-            });
+                    <div class="documents-container">
+                        <!-- Les documents seront insérés ici par JavaScript -->
+                        <div class="empty-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Chargement des documents...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
-            // Fonctionnalité modale
-            const modals = document.querySelectorAll('.modal');
-            
-            // Ouvrir la modale
-            document.querySelectorAll('[data-modal]').forEach(function(button) {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const modalId = this.dataset.modal;
-                    document.getElementById(modalId).style.display = 'block';
-                });
-            });
-            
-            // Fermer la modale avec le bouton X
-            document.querySelectorAll('.modal-close').forEach(function(close) {
-                close.addEventListener('click', function() {
-                    this.closest('.modal').style.display = 'none';
-                });
-            });
-            
-            // Fermer la modale avec le bouton Annuler
-            document.querySelectorAll('#cancel-btn, #cancel-document-btn, #cancel-trip-btn').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    this.closest('.modal').style.display = 'none';
-                });
-            });
-            
-            // Fermer la modale en cliquant à l'extérieur
-            window.addEventListener('click', function(event) {
-                modals.forEach(function(modal) {
-                    if (event.target === modal) {
-                        modal.style.display = 'none';
-                    }
-                });
-            });
-            
-            // Lien "Voir tous les documents"
-            const viewAllDocsLink = document.getElementById('view-all-docs');
-            if (viewAllDocsLink) {
-                viewAllDocsLink.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    showView('documents-view');
-                    loadAllDocuments();
-                });
-            }
-            
-            console.log('Configuration des écouteurs d\'événements terminée');
-        }
-        
-        // Fonction pour afficher les boutons d'authentification Google
-        function displayAuthButtons() {
-            // Afficher le bouton d'authentification dans la section documents récents
-            const documentsContainer = document.querySelector('.documents-container');
-            if (documentsContainer) {
-                documentsContainer.innerHTML = `
-                    <div class="auth-prompt">
-                        <p>Connectez-vous à Google Drive pour accéder à vos documents</p>
-                        <button class="btn btn-primary" id="drive-auth-btn">
-                            <i class="fab fa-google"></i> Se connecter
+            <!-- Detail View for Paris -->
+            <div class="view detail-view" id="paris-view">
+                <div class="detail-header">
+                    <img src="https://source.unsplash.com/featured/?paris,eiffel" alt="Paris" class="detail-img">
+                    <button class="back-button" onclick="showView('home-view')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button class="action-button">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="action-button">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                    
+                    <div class="thumbnail-gallery">
+                        <img src="https://source.unsplash.com/featured/?paris,eiffel" alt="Paris" class="thumbnail active">
+                        <img src="https://source.unsplash.com/featured/?paris,louvre" alt="Louvre" class="thumbnail">
+                        <img src="https://source.unsplash.com/featured/?paris,arc" alt="Arc de Triomphe" class="thumbnail">
+                        <img src="https://source.unsplash.com/featured/?paris,seine" alt="Seine" class="thumbnail">
+                        <img src="https://source.unsplash.com/featured/?paris,montmartre" alt="Montmartre" class="thumbnail">
+                    </div>
+                </div>
+                
+                <div class="detail-content">
+                    <div class="detail-title">
+                        <span>Paris - Août 2023</span>
+                        <span class="detail-price">6 jours</span>
+                    </div>
+                    <div class="detail-subtitle">France</div>
+                    
+                    <div class="map-container">
+                        <div id="map-paris"></div>
+                    </div>
+                    
+                    <div class="detail-info">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Vol aller</div>
+                                <div class="info-value">10 Août 2023 - 08:30</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-hotel"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Hébergement</div>
+                                <div class="info-value">Hôtel Ritz Paris</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Durée</div>
+                                <div class="info-value">10 - 15 Août 2023</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin: 25px 0 15px;">Chronologie du séjour</h3>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">
+                                    <span>Vol New York-Paris</span>
+                                    <span class="timeline-date">10 Août, 08:30</span>
+                                </div>
+                                <div class="timeline-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Terminal 2E, Charles de Gaulle</span>
+                                </div>
+                                <div class="timeline-description">
+                                    Vol AF001 - Classe Affaires
+                                </div>
+                                <div class="timeline-attachments">
+                                    <a href="#" class="attachment">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <span>Carte d'embarquement.pdf</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                <i class="fas fa-hotel"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">
+                                    <span>Hôtel Ritz Paris</span>
+                                    <span class="timeline-date">10 Août, 14:00</span>
+                                </div>
+                                <div class="timeline-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>15 Place Vendôme, 75001 Paris</span>
+                                </div>
+                                <div class="timeline-description">
+                                    Suite Deluxe avec vue<br>
+                                    Check-in: 10 Août - Check-out: 15 Août
+                                </div>
+                                <div class="timeline-attachments">
+                                    <a href="#" class="attachment">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <span>Confirmation_Ritz.pdf</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                <i class="fas fa-hiking"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">
+                                    <span>Visite privée du Louvre</span>
+                                    <span class="timeline-date">11 Août, 09:00</span>
+                                </div>
+                                <div class="timeline-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Musée du Louvre, Rue de Rivoli</span>
+                                </div>
+                                <div class="timeline-description">
+                                    Visite guidée privée du musée avec expert en histoire de l'art<br>
+                                    Durée: 3h
+                                </div>
+                                <div class="timeline-attachments">
+                                    <a href="#" class="attachment">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <span>Tickets_Louvre.pdf</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-outline" style="margin-right: 15px;" data-modal="add-item-modal">
+                            <i class="fas fa-edit"></i>
+                            <span>Modifier</span>
+                        </button>
+                        <button class="btn btn-primary" data-modal="add-item-modal">
+                            <i class="fas fa-plus"></i>
+                            <span>Ajouter un élément</span>
                         </button>
                     </div>
-                `;
-                
-                // Ajouter l'écouteur d'événement pour le bouton d'authentification
-                const authButton = document.getElementById('drive-auth-btn');
-                if (authButton) {
-                    authButton.addEventListener('click', handleAuthClick);
-                }
-            }
+                </div>
+            </div>
             
-            // Afficher le bouton d'authentification dans la vue documents
-            const documentsList = document.querySelector('.documents-list');
-            if (documentsList) {
-                documentsList.innerHTML = `
-                    <div class="auth-prompt">
-                        <p>Connectez-vous à Google Drive pour accéder à vos documents</p>
-                        <button class="btn btn-primary" id="drive-auth-all-btn">
-                            <i class="fab fa-google"></i> Se connecter
+            <!-- Detail View for Tokyo -->
+            <div class="view detail-view" id="tokyo-view">
+                <div class="detail-header">
+                    <img src="https://source.unsplash.com/featured/?tokyo,japan" alt="Tokyo" class="detail-img">
+                    <button class="back-button" onclick="showView('home-view')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button class="action-button">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="action-button">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                    
+                    <div class="thumbnail-gallery">
+                        <img src="https://source.unsplash.com/featured/?tokyo,japan" alt="Tokyo" class="thumbnail active">
+                        <img src="https://source.unsplash.com/featured/?tokyo,shibuya" alt="Shibuya" class="thumbnail">
+                        <img src="https://source.unsplash.com/featured/?tokyo,temple" alt="Temple" class="thumbnail">
+                        <img src="https://source.unsplash.com/featured/?tokyo,sakura" alt="Sakura" class="thumbnail">
+                    </div>
+                </div>
+                
+                <div class="detail-content">
+                    <div class="detail-title">
+                        <span>Tokyo - Janvier 2024</span>
+                        <span class="detail-price">7 jours</span>
+                    </div>
+                    <div class="detail-subtitle">Japon</div>
+                    
+                    <div class="map-container">
+                        <div id="map-tokyo"></div>
+                    </div>
+                    
+                    <div class="detail-info">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Vol aller</div>
+                                <div class="info-value">15 Jan 2024 - 13:20</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-hotel"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Hébergement</div>
+                                <div class="info-value">Park Hyatt Tokyo</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Durée</div>
+                                <div class="info-value">15 - 22 Jan 2024</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin: 25px 0 15px;">Chronologie du séjour</h3>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">
+                                    <span>Vol Paris-Tokyo</span>
+                                    <span class="timeline-date">15 Jan, 13:20</span>
+                                </div>
+                                <div class="timeline-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Aéroport de Narita</span>
+                                </div>
+                                <div class="timeline-description">
+                                    Vol JL416 - Direct
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                <i class="fas fa-hotel"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">
+                                    <span>Park Hyatt Tokyo</span>
+                                    <span class="timeline-date">15 Jan, 18:00</span>
+                                </div>
+                                <div class="timeline-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>3-7-1-2 Nishi Shinjuku, Shinjuku-Ku</span>
+                                </div>
+                                <div class="timeline-description">
+                                    Chambre Park Deluxe<br>
+                                    Check-in: 15 Jan - Check-out: 22 Jan
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                <i class="fas fa-torii-gate"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">
+                                    <span>Visite du sanctuaire Meiji</span>
+                                    <span class="timeline-date">16 Jan, 10:00</span>
+                                </div>
+                                <div class="timeline-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>1-1 Yoyogikamizonocho, Shibuya-ku</span>
+                                </div>
+                                <div class="timeline-description">
+                                    Visite du plus grand sanctuaire shinto de Tokyo<br>
+                                    Durée: 2h
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-outline" style="margin-right: 15px;" data-modal="add-item-modal">
+                            <i class="fas fa-edit"></i>
+                            <span>Modifier</span>
+                        </button>
+                        <button class="btn btn-primary" data-modal="add-item-modal">
+                            <i class="fas fa-plus"></i>
+                            <span>Ajouter un élément</span>
                         </button>
                     </div>
-                `;
-                
-                // Ajouter l'écouteur d'événement pour le bouton d'authentification
-                const authAllButton = document.getElementById('drive-auth-all-btn');
-                if (authAllButton) {
-                    authAllButton.addEventListener('click', handleAuthClick);
-                }
-            }
-        }
-        
-        // Fonction pour gérer le clic sur le bouton d'authentification
-        async function handleAuthClick() {
-            try {
-                showLoader('Connexion à Google Drive...');
-                
-                // Vérifier que l'API Google est chargée
-                await checkGoogleApiReady();
-                
-                // Tenter de se connecter à Google Drive
-                await driveService.signIn();
-                
-                // Si la connexion est réussie, initialiser le gestionnaire de documents
-                if (!documentManager.isInitialized) {
-                    await documentManager.initialize();
-                }
-                
-                // Rafraîchir les listes de documents
-                if (document.querySelector('.documents-view.active')) {
-                    loadAllDocuments();
-                } else {
-                    loadRecentDocuments();
-                }
-                
-                hideLoader();
-                showNotification('Connexion à Google Drive réussie', 'success');
-            } catch (error) {
-                console.error('Erreur lors de la connexion à Google Drive:', error);
-                hideLoader();
-                showNotification('Erreur lors de la connexion à Google Drive', 'error');
-            }
-        }
-        
-        // Configurer les téléchargements de documents
-        function setupDocumentUploads() {
-            // Gérer les téléchargements de fichiers depuis les modales
-            const fileInputs = document.querySelectorAll('input[type="file"]');
-            fileInputs.forEach(input => {
-                input.addEventListener('change', function(e) {
-                    // Vider le conteneur de prévisualisation
-                    const previewContainer = this.parentElement.querySelector('.file-preview-container');
-                    if (previewContainer) {
-                        previewContainer.innerHTML = '';
-                        
-                        // Ajouter une prévisualisation des fichiers sélectionnés
-                        if (this.files.length > 0) {
-                            const filePreview = document.createElement('div');
-                            filePreview.classList.add('file-preview');
-                            
-                            for (const file of this.files) {
-                                const fileItem = document.createElement('div');
-                                fileItem.classList.add('file-item');
-                                fileItem.innerHTML = `
-                                    <i class="fas ${file.type.includes('image') ? 'fa-file-image' : file.type.includes('pdf') ? 'fa-file-pdf' : 'fa-file'}"></i>
-                                    <span>${file.name}</span>
-                                    <small>(${formatFileSize(file.size)})</small>
-                                `;
-                                filePreview.appendChild(fileItem);
-                            }
-                            
-                            previewContainer.appendChild(filePreview);
-                        }
-                    }
-                });
-            });
-            
-            // Gérer la soumission du formulaire d'ajout d'élément
-            const addItemForm = document.getElementById('add-item-form');
-            if (addItemForm) {
-                addItemForm.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    
-                    try {
-                        // Récupérer les données du formulaire
-                        const formData = new FormData(this);
-                        const itemType = formData.get('item-type');
-                        const itemTitle = formData.get('item-title');
-                        const tripName = getCurrentTrip();
-                        
-                        // Gérer les fichiers joints
-                        const fileInput = document.getElementById('item-attachment');
-                        if (fileInput && fileInput.files.length > 0) {
-                            // Montrer un indicateur de chargement
-                            showLoader('Téléchargement des documents...');
-                            
-                            // Vérifier si l'utilisateur est connecté
-                            if (!driveService.isAuthenticated) {
-                                try {
-                                    await driveService.signIn();
-                                } catch (error) {
-                                    console.error('Erreur lors de la connexion:', error);
-                                    showNotification('Erreur de connexion à Google Drive', 'error');
-                                    hideLoader();
-                                    return;
-                                }
-                            }
-                            
-                            // Initialiser le gestionnaire de documents si nécessaire
-                            if (!documentManager.isInitialized) {
-                                await documentManager.initialize();
-                            }
-                            
-                            // Télécharger chaque fichier
-                            for (const file of fileInput.files) {
-                                await documentManager.uploadTripDocument(tripName, file, {
-                                    itemType,
-                                    itemTitle,
-                                    uploadDate: new Date().toISOString(),
-                                    description: formData.get('item-description') || '',
-                                    location: formData.get('item-location') || '',
-                                    date: formData.get('item-date') || ''
-                                });
-                            }
-                            
-                            // Actualiser la liste des documents récents
-                            loadRecentDocuments();
-                            
-                            // Notifier l'utilisateur
-                            showNotification('Documents téléchargés avec succès', 'success');
-                        }
-                        
-                        // Ajouter l'élément à la chronologie (simulation)
-                        const timeline = document.querySelector('.detail-view.active .timeline');
-                        if (timeline) {
-                            const newItem = document.createElement('div');
-                            newItem.className = 'timeline-item';
-                            newItem.innerHTML = `
-                                <div class="timeline-marker">
-                                    <i class="fas ${getIconForItemType(itemType)}"></i>
-                                </div>
-                                <div class="timeline-content">
-                                    <div class="timeline-title">
-                                        <span>${itemTitle}</span>
-                                        <span class="timeline-date">${formatDateTime(formData.get('item-date'))}</span>
-                                    </div>
-                                    <div class="timeline-location">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        <span>${formData.get('item-location') || 'Lieu non spécifié'}</span>
-                                    </div>
-                                    <div class="timeline-description">
-                                        ${formData.get('item-description') || ''}
-                                    </div>
-                                    ${fileInput && fileInput.files.length > 0 ? '<div class="timeline-attachments">' + 
-                                        Array.from(fileInput.files).map(file => 
-                                            `<a href="#" class="attachment">
-                                                <i class="fas ${file.type.includes('image') ? 'fa-file-image' : file.type.includes('pdf') ? 'fa-file-pdf' : 'fa-file'}"></i>
-                                                <span>${file.name}</span>
-                                            </a>`
-                                        ).join('') + '</div>' : ''}
-                                </div>
-                            `;
-                            timeline.appendChild(newItem);
-                        }
-                        
-                        // Fermer la modale
-                        document.getElementById('add-item-modal').style.display = 'none';
-                        
-                        // Réinitialiser le formulaire
-                        this.reset();
-                        
-                        // Vider la prévisualisation des fichiers
-                        const previewContainer = this.querySelector('.file-preview-container');
-                        if (previewContainer) {
-                            previewContainer.innerHTML = '';
-                        }
-                        
-                    } catch (error) {
-                        console.error('Erreur lors de l\'ajout de l\'élément:', error);
-                        showNotification('Erreur lors de l\'ajout de l\'élément', 'error');
-                    } finally {
-                        hideLoader();
-                    }
-                });
-            }
-            
-            // Gérer la soumission du formulaire d'ajout de document
-            const addDocumentForm = document.getElementById('add-document-form');
-            if (addDocumentForm) {
-                addDocumentForm.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    
-                    try {
-                        // Récupérer les données du formulaire
-                        const formData = new FormData(this);
-                        const docType = formData.get('document-type');
-                        const docTitle = formData.get('document-title');
-                        const tripName = formData.get('document-trip') || 'General';
-                        
-                        // Gérer le fichier
-                        const fileInput = document.getElementById('document-file');
-                        if (fileInput && fileInput.files.length > 0) {
-                            // Montrer un indicateur de chargement
-                            showLoader('Téléchargement du document...');
-                            
-                            // Vérifier si l'utilisateur est connecté
-                            if (!driveService.isAuthenticated) {
-                                try {
-                                    await driveService.signIn();
-                                } catch (error) {
-                                    console.error('Erreur lors de la connexion:', error);
-                                    showNotification('Erreur de connexion à Google Drive', 'error');
-                                    hideLoader();
-                                    return;
-                                }
-                            }
-                            
-                            // Initialiser le gestionnaire de documents si nécessaire
-                            if (!documentManager.isInitialized) {
-                                await documentManager.initialize();
-                            }
-                            
-                            // Télécharger le fichier
-                            await documentManager.uploadTripDocument(tripName, fileInput.files[0], {
-                                docType,
-                                docTitle,
-                                uploadDate: new Date().toISOString(),
-                                notes: formData.get('document-notes') || '',
-                                docDate: formData.get('document-date') || ''
-                            });
-                            
-                            // Actualiser les listes de documents
-                            if (document.querySelector('.documents-view.active')) {
-                                loadAllDocuments();
-                            } else {
-                                loadRecentDocuments();
-                            }
-                            
-                            // Notifier l'utilisateur
-                            showNotification('Document téléchargé avec succès', 'success');
-                        }
-                        
-                        // Fermer la modale
-                        document.getElementById('add-document-modal').style.display = 'none';
-                        
-                        // Réinitialiser le formulaire
-                        this.reset();
-                        
-                        // Vider la prévisualisation des fichiers
-                        const previewContainer = this.querySelector('.file-preview-container');
-                        if (previewContainer) {
-                            previewContainer.innerHTML = '';
-                        }
-                        
-                    } catch (error) {
-                        console.error('Erreur lors de l\'ajout du document:', error);
-                        showNotification('Erreur lors de l\'ajout du document', 'error');
-                    } finally {
-                        hideLoader();
-                    }
-                });
-            }
-            
-            // Gérer la soumission du formulaire d'ajout de voyage
-            const addTripForm = document.getElementById('add-trip-form');
-            if (addTripForm) {
-                addTripForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    try {
-                        // Pour l'instant, nous simulons simplement l'ajout d'un voyage
-                        // Dans une application réelle, ces données seraient envoyées à un serveur
-                        
-                        // Récupérer les données du formulaire
-                        const formData = new FormData(this);
-                        const tripTitle = formData.get('trip-title');
-                        
-                        // Notifier l'utilisateur
-                        showNotification(`Voyage "${tripTitle}" ajouté avec succès`, 'success');
-                        
-                        // Fermer la modale
-                        document.getElementById('add-trip-modal').style.display = 'none';
-                        
-                        // Réinitialiser le formulaire
-                        this.reset();
-                        
-                        // Vider la prévisualisation de l'image
-                        const previewContainer = this.querySelector('.file-preview-container');
-                        if (previewContainer) {
-                            previewContainer.innerHTML = '';
-                        }
-                        
-                    } catch (error) {
-                        console.error('Erreur lors de l\'ajout du voyage:', error);
-                        showNotification('Erreur lors de l\'ajout du voyage', 'error');
-                    }
-                });
-            }
-        }
+                </div>
+            </div>
